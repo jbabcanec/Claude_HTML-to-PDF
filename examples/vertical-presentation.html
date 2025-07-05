@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920">
+    <title>Mobile-First Product Launch</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            width: 1080px;
+            height: 1920px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        /* Slide 1 - Title */
+        .slide1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .slide1 h1 {
+            font-size: 120px;
+            font-weight: 800;
+            margin-bottom: 40px;
+            line-height: 1.1;
+        }
+
+        .slide1 p {
+            font-size: 48px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* Slide 2 - Features */
+        .slide2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .slide2 h2 {
+            font-size: 80px;
+            margin-bottom: 60px;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 40px;
+            margin: 20px 0;
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature h3 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature p {
+            font-size: 36px;
+            opacity: 0.9;
+        }
+
+        /* Slide 3 - Stats */
+        .slide3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .slide3 h2 {
+            font-size: 80px;
+            margin-bottom: 80px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            width: 100%;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 60px;
+            border-radius: 30px;
+        }
+
+        .stat-number {
+            font-size: 120px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .stat-label {
+            font-size: 40px;
+            opacity: 0.9;
+        }
+
+        /* Slide 4 - CTA */
+        .slide4 {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: #333;
+        }
+
+        .slide4 h2 {
+            font-size: 100px;
+            margin-bottom: 40px;
+            font-weight: 800;
+        }
+
+        .slide4 p {
+            font-size: 48px;
+            margin-bottom: 60px;
+            max-width: 800px;
+        }
+
+        .cta-button {
+            background: #333;
+            color: white;
+            font-size: 48px;
+            padding: 40px 80px;
+            border-radius: 100px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        .navigation {
+            position: fixed;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .nav-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide 1: Title -->
+    <div class="slide slide1 active">
+        <h1>Launch Your App</h1>
+        <p>Mobile-First Design Excellence</p>
+    </div>
+
+    <!-- Slide 2: Features -->
+    <div class="slide slide2">
+        <h2>Key Features</h2>
+        <div class="feature">
+            <h3>Instant Loading</h3>
+            <p>Optimized for speed</p>
+        </div>
+        <div class="feature">
+            <h3>Offline First</h3>
+            <p>Works everywhere</p>
+        </div>
+        <div class="feature">
+            <h3>Smart Sync</h3>
+            <p>Always up to date</p>
+        </div>
+    </div>
+
+    <!-- Slide 3: Stats -->
+    <div class="slide slide3">
+        <h2>Impact Numbers</h2>
+        <div class="stat-grid">
+            <div class="stat">
+                <div class="stat-number">2M+</div>
+                <div class="stat-label">Active Users</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">4.8★</div>
+                <div class="stat-label">App Store Rating</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">50ms</div>
+                <div class="stat-label">Load Time</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4: CTA -->
+    <div class="slide slide4">
+        <h2>Ready to Start?</h2>
+        <p>Join millions of users who love our mobile experience</p>
+        <a href="#" class="cta-button">Download Now</a>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <div class="nav-dot active" onclick="showSlide(0)"></div>
+        <div class="nav-dot" onclick="showSlide(1)"></div>
+        <div class="nav-dot" onclick="showSlide(2)"></div>
+        <div class="nav-dot" onclick="showSlide(3)"></div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.nav-dot');
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentSlide = index;
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                if (currentSlide < slides.length - 1) {
+                    showSlide(currentSlide + 1);
+                }
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                if (currentSlide > 0) {
+                    showSlide(currentSlide - 1);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

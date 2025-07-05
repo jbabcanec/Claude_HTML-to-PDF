@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate ML Model - Performance Showcase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0e27;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .presentation {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            padding: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Slide 1 - Title */
+        .slide-1 {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a237e 100%);
+            text-align: center;
+            align-items: center;
+        }
+
+        .slide-1 .title-container {
+            position: relative;
+            z-index: 2;
+        }
+
+        .slide-1 h1 {
+            font-size: 72px;
+            font-weight: 300;
+            letter-spacing: -2px;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #64b5f6 0%, #e3f2fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .slide-1 .subtitle {
+            font-size: 28px;
+            color: #b3c5ef;
+            font-weight: 300;
+            margin-bottom: 60px;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+        }
+
+        .tech-stack {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .tech-badge {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            animation: fadeInUp 1s ease-out forwards;
+        }
+
+        .tech-badge:nth-child(1) { animation-delay: 0.8s; }
+        .tech-badge:nth-child(2) { animation-delay: 1s; }
+        .tech-badge:nth-child(3) { animation-delay: 1.2s; }
+
+        /* Slide 2 - Project Overview */
+        .slide-2 {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+        }
+
+        .slide-2 h2 {
+            font-size: 48px;
+            margin-bottom: 60px;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .overview-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .overview-text {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+
+        .overview-section h3 {
+            font-size: 24px;
+            color: #64b5f6;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .overview-section p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #e3f2fd;
+        }
+
+        .pipeline-diagram {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pipeline-step {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            width: 160px;
+            height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .pipeline-step:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .step-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .step-title {
+            font-size: 16px;
+            color: #ffffff;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .step-desc {
+            font-size: 14px;
+            color: #b3c5ef;
+        }
+
+        .arrow {
+            font-size: 20px;
+            color: #64b5f6;
+            font-weight: bold;
+            align-self: center;
+        }
+
+        /* Slide 3 - Architecture */
+        .slide-3 {
+            background: linear-gradient(135deg, #283593 0%, #3949ab 100%);
+        }
+
+        .slide-3 h2 {
+            font-size: 48px;
+            margin-bottom: 60px;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .arch-component {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px 25px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .arch-component:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .arch-component::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(100, 181, 246, 0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+
+        .arch-component:hover::before {
+            animation: shimmer 0.5s ease-out;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        .arch-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .arch-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #64b5f6;
+        }
+
+        .arch-description {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #b3c5ef;
+        }
+
+        /* Slide 4 - Technical Excellence */
+        .slide-4 {
+            background: linear-gradient(135deg, #3949ab 0%, #5e35b1 100%);
+        }
+
+        .slide-4 h2 {
+            font-size: 48px;
+            margin-bottom: 60px;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .features-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #64b5f6, #e3f2fd, #64b5f6);
+            border-radius: 16px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover::after {
+            opacity: 0.3;
+        }
+
+        .feature-number {
+            font-size: 72px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #64b5f6 0%, #e3f2fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .feature-detail {
+            font-size: 16px;
+            color: #b3c5ef;
+            line-height: 1.6;
+        }
+
+        /* Slide 5 - Performance Metrics */
+        .slide-5 {
+            background: linear-gradient(135deg, #5e35b1 0%, #7e57c2 100%);
+        }
+
+        .slide-5 h2 {
+            font-size: 48px;
+            margin-bottom: 60px;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .metric-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transform: scale(0.9);
+            opacity: 0;
+            animation: scaleIn 0.5s ease-out forwards;
+        }
+
+        .metric-box:nth-child(1) { animation-delay: 0.1s; }
+        .metric-box:nth-child(2) { animation-delay: 0.2s; }
+        .metric-box:nth-child(3) { animation-delay: 0.3s; }
+        .metric-box:nth-child(4) { animation-delay: 0.4s; }
+        .metric-box:nth-child(5) { animation-delay: 0.5s; }
+        .metric-box:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes scaleIn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .metric-value {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #64b5f6 0%, #e3f2fd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 16px;
+            color: #b3c5ef;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Slide 6 - IAAO Compliance */
+        .slide-6 {
+            background: linear-gradient(135deg, #7e57c2 0%, #0a0e27 100%);
+        }
+
+        .slide-6 h2 {
+            font-size: 48px;
+            margin-bottom: 60px;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .compliance-table {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .compliance-row {
+            display: grid;
+            grid-template-columns: 2.5fr 1fr 1fr 1fr;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            align-items: center;
+            gap: 20px;
+        }
+
+        .compliance-row:last-child {
+            border-bottom: none;
+        }
+
+        .compliance-header {
+            font-weight: 600;
+            color: #64b5f6;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .compliance-metric {
+            font-size: 18px;
+        }
+
+        .compliance-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #e3f2fd;
+        }
+
+        .compliance-target {
+            font-size: 16px;
+            color: #b3c5ef;
+        }
+
+        .compliance-status {
+            font-size: 24px;
+        }
+
+        .iaao-explanation {
+            margin-top: 50px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .iaao-explanation h3 {
+            font-size: 24px;
+            color: #64b5f6;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 300;
+        }
+
+        .explanation-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .explanation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px 0;
+        }
+
+        .bullet {
+            color: #64b5f6;
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 2px;
+        }
+
+        .explanation-item span:last-child {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #e3f2fd;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        .slide-indicator {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator-dot.active {
+            width: 30px;
+            border-radius: 5px;
+            background: #64b5f6;
+        }
+
+        /* Animated background */
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .gradient-circle {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .gradient-circle:nth-child(1) {
+            background: radial-gradient(circle, #64b5f6, transparent);
+            top: -200px;
+            right: -200px;
+            animation-delay: 0s;
+        }
+
+        .gradient-circle:nth-child(2) {
+            background: radial-gradient(circle, #e3f2fd, transparent);
+            bottom: -200px;
+            left: -200px;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(30px, -30px) scale(1.1);
+            }
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .slide {
+                padding: 40px;
+            }
+
+            .slide-1 h1 {
+                font-size: 48px;
+            }
+
+            .overview-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .pipeline-diagram {
+                flex-direction: column;
+            }
+
+            .pipeline-step {
+                width: 250px;
+            }
+
+            .architecture-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .arch-component {
+                height: 180px;
+            }
+
+            .features-container {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px;
+            }
+
+            .slide-1 h1 {
+                font-size: 36px;
+            }
+
+            .slide-1 .subtitle {
+                font-size: 20px;
+            }
+
+            .tech-stack {
+                flex-wrap: wrap;
+            }
+
+            .nav-buttons {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .compliance-row {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .iaao-explanation {
+                margin-top: 30px;
+            }
+
+            .iaao-explanation h3 {
+                font-size: 20px;
+            }
+
+            .explanation-item span:last-child {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide slide-1 active">
+            <div class="animated-bg">
+                <div class="gradient-circle"></div>
+                <div class="gradient-circle"></div>
+            </div>
+            <div class="title-container">
+                <h1>Real Estate Valuation ML</h1>
+                <p class="subtitle">Production-Ready Property Price Prediction at Scale</p>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin: 30px 0;">
+                    <img src="167040978.png" alt="Torchstack Logo" style="height: 40px; width: auto;">
+                    <span style="font-size: 24px; color: #64b5f6; font-weight: 300;">Torchstack.ai</span>
+                </div>
+                <div class="tech-stack">
+                    <span class="tech-badge">XGBoost + LightGBM</span>
+                    <span class="tech-badge">583 Features</span>
+                    <span class="tech-badge">IAAO Certified</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Project Overview -->
+        <div class="slide slide-2">
+            <h2>Project Overview</h2>
+            <div class="overview-container">
+                <div class="overview-text">
+                    <div class="overview-section">
+                        <h3>The Challenge</h3>
+                        <p>Accurate real estate valuation at scale requires sophisticated ML models that meet professional assessment standards</p>
+                    </div>
+                    <div class="overview-section">
+                        <h3>Our Solution</h3>
+                        <p>Production-ready ensemble ML pipeline trained on 18,494 real estate transactions with advanced feature engineering and IAAO compliance</p>
+                    </div>
+                    <div class="overview-section">
+                        <h3>Key Innovation</h3>
+                        <p>3-level stacking ensemble combining XGBoost, LightGBM, and RandomForest with automatic time adjustment for market changes</p>
+                    </div>
+                </div>
+                <div class="pipeline-diagram">
+                    <div class="pipeline-step">
+                        <div class="step-icon">📊</div>
+                        <div class="step-title">Data Ingestion</div>
+                        <div class="step-desc">18K+ transactions</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="pipeline-step">
+                        <div class="step-icon">🔧</div>
+                        <div class="step-title">Feature Engineering</div>
+                        <div class="step-desc">583 features</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="pipeline-step">
+                        <div class="step-icon">🧠</div>
+                        <div class="step-title">Ensemble Training</div>
+                        <div class="step-desc">3-level stacking</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="pipeline-step">
+                        <div class="step-icon">🎯</div>
+                        <div class="step-title">Predictions</div>
+                        <div class="step-desc">90.6% R² accuracy</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Model Architecture -->
+        <div class="slide slide-3">
+            <h2>Advanced Ensemble Architecture</h2>
+            <div class="architecture-grid">
+                <div class="arch-component">
+                    <span class="arch-icon">🎯</span>
+                    <h3 class="arch-title">XGBoost Base Model</h3>
+                    <p class="arch-description">2000 estimators, max_depth=6, learning_rate=0.03, histogram tree method with L1/L2 regularization (α=0.1, λ=1.0)</p>
+                </div>
+                <div class="arch-component">
+                    <span class="arch-icon">⚡</span>
+                    <h3 class="arch-title">LightGBM Engine</h3>
+                    <p class="arch-description">2000 estimators, leaf-wise growth, learning_rate=0.05, early stopping after 50 rounds, subsample=0.8</p>
+                </div>
+                <div class="arch-component">
+                    <span class="arch-icon">🌲</span>
+                    <h3 class="arch-title">Random Forest</h3>
+                    <p class="arch-description">500 estimators, unlimited depth, auto feature selection, bootstrap sampling for variance reduction</p>
+                </div>
+                <div class="arch-component">
+                    <span class="arch-icon">🔗</span>
+                    <h3 class="arch-title">Stacking Ensemble</h3>
+                    <p class="arch-description">StackingRegressor with passthrough=True, XGBoost meta-learner (500 est., depth=4) combining base predictions</p>
+                </div>
+                <div class="arch-component">
+                    <span class="arch-icon">🔧</span>
+                    <h3 class="arch-title">Feature Pipeline</h3>
+                    <p class="arch-description">583 engineered features: spatial (lat/lng), temporal (seasonality), structural (sqft, age), SelectKBest filtering</p>
+                </div>
+                <div class="arch-component">
+                    <span class="arch-icon">📊</span>
+                    <h3 class="arch-title">Target Engineering</h3>
+                    <p class="arch-description">log1p(price) transformation, IsolationForest outlier detection, robust scaling, train/test stratification</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Technical Implementation -->
+        <div class="slide slide-4">
+            <h2>Technical Excellence</h2>
+            <div class="features-container">
+                <div class="feature-card">
+                    <div class="feature-number">583</div>
+                    <h3 class="feature-title">Engineered Features</h3>
+                    <p class="feature-detail">Comprehensive property representation including spatial, temporal, structural, and interaction features with automatic K-best selection</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">3</div>
+                    <h3 class="feature-title">Ensemble Levels</h3>
+                    <p class="feature-detail">Base models (XGBoost, LightGBM, RandomForest), stacking ensemble, and super ensemble for maximum accuracy</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">18K+</div>
+                    <h3 class="feature-title">Training Samples</h3>
+                    <p class="feature-detail">Trained on 18,494 real estate transactions with robust outlier detection and preprocessing</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-number">6.1%</div>
+                    <h3 class="feature-title">Time Adjustment</h3>
+                    <p class="feature-detail">Automatic inflation adjustment from 2023 to 2025 with configurable rates</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Performance Metrics -->
+        <div class="slide slide-5">
+            <h2>Proven Performance</h2>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-value">90.6%</div>
+                    <div class="metric-label">R² Score</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">$31K</div>
+                    <div class="metric-label">Mean Error</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">8.92%</div>
+                    <div class="metric-label">MAPE</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">67.9%</div>
+                    <div class="metric-label">Within ±10%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">91.5%</div>
+                    <div class="metric-label">Within ±20%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">19K</div>
+                    <div class="metric-label">Properties Tested</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: IAAO Compliance -->
+        <div class="slide slide-6">
+            <h2>Industry Standard Compliance</h2>
+            <div class="compliance-table">
+                <div class="compliance-row compliance-header">
+                    <div>IAAO Metric</div>
+                    <div>Value</div>
+                    <div>Target</div>
+                    <div>Status</div>
+                </div>
+                <div class="compliance-row">
+                    <div class="compliance-metric">Coefficient of Dispersion (COD)</div>
+                    <div class="compliance-value">8.95%</div>
+                    <div class="compliance-target">≤ 15%</div>
+                    <div class="compliance-status">✅</div>
+                </div>
+                <div class="compliance-row">
+                    <div class="compliance-metric">Price-Related Bias (PRB)</div>
+                    <div class="compliance-value">-0.024</div>
+                    <div class="compliance-target">≤ ±0.05</div>
+                    <div class="compliance-status">✅</div>
+                </div>
+                <div class="compliance-row">
+                    <div class="compliance-metric">Price-Related Differential (PRD)</div>
+                    <div class="compliance-value">1.014</div>
+                    <div class="compliance-target">0.98-1.03</div>
+                    <div class="compliance-status">✅</div>
+                </div>
+                <div class="compliance-row">
+                    <div class="compliance-metric">Coefficient of Variation (COV)</div>
+                    <div class="compliance-value">12.58%</div>
+                    <div class="compliance-target">≤ 20%</div>
+                    <div class="compliance-status">✅</div>
+                </div>
+                <div class="compliance-row">
+                    <div class="compliance-metric">Median Ratio</div>
+                    <div class="compliance-value">0.995</div>
+                    <div class="compliance-target">0.90-1.10</div>
+                    <div class="compliance-status">✅</div>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <button class="nav-btn" onclick="previousSlide()">‹</button>
+            <button class="nav-btn" onclick="nextSlide()">›</button>
+        </div>
+
+        <div class="slide-indicator">
+            <span class="indicator-dot active" onclick="goToSlide(0)"></span>
+            <span class="indicator-dot" onclick="goToSlide(1)"></span>
+            <span class="indicator-dot" onclick="goToSlide(2)"></span>
+            <span class="indicator-dot" onclick="goToSlide(3)"></span>
+            <span class="indicator-dot" onclick="goToSlide(4)"></span>
+            <span class="indicator-dot" onclick="goToSlide(5)"></span>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const indicators = document.querySelectorAll('.indicator-dot');
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            indicators.forEach(dot => dot.classList.remove('active'));
+            
+            slides[index].classList.add('active');
+            indicators[index].classList.add('active');
+            currentSlide = index;
+        }
+
+        function nextSlide() {
+            const nextIndex = (currentSlide + 1) % slides.length;
+            showSlide(nextIndex);
+        }
+
+        function previousSlide() {
+            const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(prevIndex);
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) previousSlide();
+        }
+    </script>
+</body>
+</html>

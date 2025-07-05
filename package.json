@@ -1,0 +1,20 @@
+{
+  "name": "html-to-pdf-presentation",
+  "version": "1.0.0",
+  "description": "Convert a browser-based HTML slide deck into a single PDF",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "npm run build && npm run start",
+    "generate": "npm run build && npm run start"
+  },
+  "dependencies": {
+    "pdf-lib": "^1.17.1",
+    "puppeteer": "^21.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "typescript": "^5.2.2"
+  }
+}

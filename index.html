@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude HTML to PDF Converter</title>
+    <link rel="stylesheet" href="web/assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="#E8E3DD"/>
+                    <path d="M20 10L28 15V25L20 30L12 25V15L20 10Z" stroke="#6B5B4F" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M20 10V20M20 20L12 15M20 20L28 15" stroke="#6B5B4F" stroke-width="2" stroke-linejoin="round"/>
+                </svg>
+                <h1>Claude HTML to PDF</h1>
+            </div>
+            <nav>
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How it Works</a>
+                <a href="#examples">Examples</a>
+                <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF" target="_blank">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 0C4.477 0 0 4.477 0 10c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0110 4.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C17.137 18.163 20 14.418 20 10c0-5.523-4.477-10-10-10z"/>
+                    </svg>
+                    GitHub
+                </a>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <h2>Convert Claude's HTML Presentations to Beautiful PDFs</h2>
+            <p>Transform your AI-generated presentations into professional PDF documents with perfect formatting preservation.</p>
+            
+            <div class="upload-area" id="uploadArea">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="15" width="40" height="35" rx="4" stroke="#6B5B4F" stroke-width="2"/>
+                    <path d="M30 35V25M30 25L25 30M30 25L35 30" stroke="#6B5B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M20 10H35L40 15H20V10Z" stroke="#6B5B4F" stroke-width="2" stroke-linejoin="round"/>
+                </svg>
+                <h3>Drop your HTML file here</h3>
+                <p>or click to browse</p>
+                <input type="file" id="fileInput" accept=".html,.htm" hidden>
+            </div>
+
+            <div class="conversion-options" id="conversionOptions" style="display: none;">
+                <h3>Conversion Settings</h3>
+                <div class="options-grid">
+                    <div class="option-group">
+                        <label for="format">Format</label>
+                        <select id="format">
+                            <option value="auto">Auto-detect</option>
+                            <option value="horizontal">Horizontal (16:9)</option>
+                            <option value="vertical">Vertical (9:16)</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="quality">Quality</label>
+                        <select id="quality">
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="margin">Margin</label>
+                        <input type="number" id="margin" value="0" min="0" max="50">
+                    </div>
+                    <div class="option-group">
+                        <label for="scale">Scale</label>
+                        <input type="number" id="scale" value="1" min="0.5" max="2" step="0.1">
+                    </div>
+                </div>
+                <button class="convert-btn" id="convertBtn">Convert to PDF</button>
+            </div>
+
+            <div class="preview-area" id="previewArea" style="display: none;">
+                <h3>Preview</h3>
+                <iframe id="previewFrame"></iframe>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <circle cx="24" cy="24" r="20" stroke="#6B5B4F" stroke-width="2"/>
+                        <path d="M16 24L22 30L32 18" stroke="#6B5B4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <h3>Perfect Formatting</h3>
+                    <p>Preserves all CSS styles, gradients, and animations in the final PDF</p>
+                </div>
+                <div class="feature-card">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <rect x="8" y="8" width="32" height="32" rx="4" stroke="#6B5B4F" stroke-width="2"/>
+                        <path d="M16 24H32M16 16H32M16 32H24" stroke="#6B5B4F" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <h3>Auto-Detection</h3>
+                    <p>Automatically detects slide structure and navigation methods</p>
+                </div>
+                <div class="feature-card">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <path d="M24 8L40 16V32L24 40L8 32V16L24 8Z" stroke="#6B5B4F" stroke-width="2" stroke-linejoin="round"/>
+                        <path d="M24 24L8 16M24 24L40 16M24 24V40" stroke="#6B5B4F" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                    <h3>Multiple Formats</h3>
+                    <p>Supports both horizontal and vertical presentation layouts</p>
+                </div>
+                <div class="feature-card">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <circle cx="24" cy="24" r="16" stroke="#6B5B4F" stroke-width="2"/>
+                        <path d="M24 16V24L30 30" stroke="#6B5B4F" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <h3>Fast Processing</h3>
+                    <p>Efficient conversion with progress tracking and optimization</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="how-it-works">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Upload HTML</h3>
+                    <p>Drop your Claude-generated HTML presentation file</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Configure</h3>
+                    <p>Choose format and adjust settings if needed</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Convert</h3>
+                    <p>Click convert and watch the magic happen</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Download</h3>
+                    <p>Get your professional PDF ready to share</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="examples" class="examples">
+            <h2>Example Presentations</h2>
+            <div class="example-grid">
+                <div class="example-card">
+                    <img src="web/assets/img/example-horizontal.png" alt="Horizontal presentation example">
+                    <h3>Business Presentation</h3>
+                    <p>16:9 horizontal format with gradient backgrounds</p>
+                    <a href="examples/business-presentation.html" download>Download HTML</a>
+                </div>
+                <div class="example-card">
+                    <img src="web/assets/img/example-vertical.png" alt="Vertical presentation example">
+                    <h3>Mobile Presentation</h3>
+                    <p>9:16 vertical format for mobile viewing</p>
+                    <a href="examples/mobile-presentation.html" download>Download HTML</a>
+                </div>
+                <div class="example-card">
+                    <img src="web/assets/img/example-technical.png" alt="Technical presentation example">
+                    <h3>Technical Documentation</h3>
+                    <p>Code snippets and technical diagrams</p>
+                    <a href="examples/technical-presentation.html" download>Download HTML</a>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>About</h4>
+                    <p>Claude HTML to PDF is an open-source tool for converting AI-generated presentations into professional PDFs.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Links</h4>
+                    <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF">GitHub Repository</a>
+                    <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF/issues">Report Issues</a>
+                    <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF/blob/main/README.md">Documentation</a>
+                </div>
+                <div class="footer-section">
+                    <h4>CLI Usage</h4>
+                    <code>npm install -g claude-html-to-pdf</code>
+                    <code>claude-pdf convert presentation.html</code>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Claude HTML to PDF. MIT License.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="web/assets/js/main.js"></script>
+</body>
+</html>
