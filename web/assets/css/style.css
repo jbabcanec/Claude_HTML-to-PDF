@@ -341,11 +341,28 @@ nav a:hover {
     box-shadow: var(--shadow-md);
 }
 
-.example-card img {
+.example-preview {
     width: 100%;
     height: 200px;
-    object-fit: cover;
     background: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.example-preview svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.example-preview.horizontal svg {
+    max-height: 180px;
+}
+
+.example-preview.vertical svg {
+    max-width: 120px;
 }
 
 .example-card h3 {
@@ -376,9 +393,16 @@ footer {
     color: var(--secondary-color);
     padding: 60px 0 24px;
     margin-top: 80px;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    padding-left: calc(50vw - 50%);
+    padding-right: calc(50vw - 50%);
 }
 
 .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 40px;
@@ -420,27 +444,153 @@ footer {
     text-align: center;
     padding-top: 24px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .hero h2 {
-        font-size: 36px;
+    .container {
+        padding: 0 16px;
     }
     
-    .hero p {
-        font-size: 18px;
+    header {
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 16px 0;
+    }
+    
+    .logo h1 {
+        font-size: 20px;
     }
     
     nav {
-        gap: 20px;
+        gap: 16px;
+        font-size: 14px;
+    }
+    
+    nav a span {
+        display: none;
+    }
+    
+    .hero {
+        padding: 40px 0;
+    }
+    
+    .hero h2 {
+        font-size: 32px;
+        line-height: 1.2;
+    }
+    
+    .hero p {
+        font-size: 16px;
+        margin-bottom: 32px;
+    }
+    
+    .upload-area {
+        padding: 40px 20px;
+    }
+    
+    .upload-area svg {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .upload-area h3 {
+        font-size: 20px;
+    }
+    
+    .conversion-options {
+        padding: 24px;
     }
     
     .options-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .preview-area {
+        padding: 24px;
+    }
+    
+    #previewFrame {
+        height: 300px;
+    }
+    
+    .features,
+    .how-it-works,
+    .examples {
+        padding: 40px 0;
+    }
+    
+    .features h2,
+    .how-it-works h2,
+    .examples h2 {
+        font-size: 28px;
+        margin-bottom: 32px;
+    }
+    
+    .feature-grid {
+        gap: 24px;
+    }
+    
+    .feature-card {
+        padding: 24px;
     }
     
     .steps {
         grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    
+    .step-number {
+        width: 48px;
+        height: 48px;
+        font-size: 20px;
+    }
+    
+    .example-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    
+    footer {
+        padding: 40px 0 20px;
+        margin-top: 40px;
+    }
+    
+    .footer-content {
+        gap: 32px;
+    }
+    
+    .footer-section code {
+        font-size: 12px;
+        word-break: break-all;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h2 {
+        font-size: 28px;
+    }
+    
+    .hero p {
+        font-size: 14px;
+    }
+    
+    .upload-area {
+        padding: 32px 16px;
+    }
+    
+    .conversion-options h3,
+    .preview-area h3 {
+        font-size: 20px;
+    }
+    
+    .convert-btn {
+        font-size: 16px;
+        padding: 14px 24px;
     }
 }
