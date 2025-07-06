@@ -202,6 +202,8 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 
 This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
 
+&copy; 2025 Joseph J Babcanec
+
 ## 🙏 Acknowledgments
 
 - Built for the Claude AI ecosystem
@@ -219,5 +221,5 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) for deta
 ---
 
 <div align="center">
-Made with ❤️ for the Claude AI community
+Made with ❤️ for the Claude AI community by Joseph J Babcanec
 </div>
