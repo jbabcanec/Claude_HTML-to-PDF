@@ -271,7 +271,7 @@
     <section class="examples-header">
         <div class="container">
             <h1>Templates & Sample Prompts</h1>
-            <p>Professional presentation templates and proven Claude AI prompts for creating stunning presentations</p>
+            <p>AI models often struggle with proper presentation sizing and PDF-optimized formatting. These professional templates and proven Claude AI prompts ensure your presentations convert perfectly to presentable PDFs.</p>
         </div>
     </section>
 
@@ -515,79 +515,90 @@
         <div class="container">
             <div class="section-header">
                 <h2>Claude AI Prompts</h2>
-                <p>Copy and paste these proven prompts to get Claude to create perfect presentations</p>
+                <p>AI models often struggle with presentation sizing and PDF optimization. These detailed prompts ensure Claude creates presentations with proper dimensions, fonts, and formatting that convert perfectly to professional PDFs.</p>
             </div>
 
             <div class="prompt-card">
                 <h3 class="prompt-title">🏢 Business Quarterly Review</h3>
                 <p class="prompt-desc">Perfect for executive presentations, board meetings, and stakeholder updates</p>
-                <div class="prompt-code">Create a professional business presentation about our Q4 2024 performance as a single, self-contained HTML file.
+                <div class="prompt-code">Create a professional business presentation about [INSERT YOUR COMPANY/TOPIC] Q4 2024 performance as a single, self-contained HTML file.
 
 Content Requirements:
-- Title slide: "Q4 2024 Business Review - Exceeding Expectations"
-- Agenda slide with 5 key topics
-- Revenue slide showing $2.3M quarterly revenue (up 34% YoY)
-- Customer growth: 1,250 new customers, 23% retention rate improvement
-- Product achievements: 3 major feature launches, 99.9% uptime
-- Team accomplishments: 5 new hires, 2 promotions, team satisfaction 8.7/10
-- 2025 outlook: expansion goals, new market entry, Series B funding
+- Title slide: "[INSERT YOUR TITLE] - [INSERT SUBTITLE/TAGLINE]"
+- Agenda slide with [INSERT NUMBER] key topics: [INSERT TOPIC 1], [INSERT TOPIC 2], etc.
+- Revenue slide showing [INSERT REVENUE AMOUNT] quarterly revenue (up [INSERT PERCENTAGE]% YoY)
+- Customer growth: [INSERT CUSTOMER COUNT] new customers, [INSERT PERCENTAGE]% retention rate improvement
+- Product achievements: [INSERT KEY ACHIEVEMENTS, e.g., "3 major feature launches, 99.9% uptime"]
+- Team accomplishments: [INSERT TEAM METRICS, e.g., "5 new hires, 2 promotions, team satisfaction 8.7/10"]
+- [INSERT YEAR] outlook: [INSERT FUTURE GOALS AND INITIATIVES]
 - Thank you/Q&A slide
 
-Technical Requirements:
-- Exactly 1920x1080px dimensions for horizontal viewing
-- Professional color scheme with blue/purple gradients
-- Large, readable fonts (minimum 36px for body text)
-- Navigation dots and keyboard arrow support
-- All CSS and JavaScript embedded (no external files)
-- Use showSlide() function and .slide/.active classes
-- Optimize for PDF conversion with high contrast
+CRITICAL Technical Requirements for PDF Conversion:
+- EXACTLY 1920x1080px dimensions (width: 1920px; height: 1080px;) - this is essential for proper PDF scaling
+- Use fixed positioning: body { width: 1920px; height: 1080px; overflow: hidden; }
+- Large, PDF-readable fonts (minimum 36px for body text, 72px+ for headings)
+- High contrast colors for PDF clarity (avoid light text on light backgrounds)
+- Navigation: .slide class with .active state, showSlide(index) function, clickable .dot navigation
+- All CSS and JavaScript embedded in single HTML file (no external dependencies)
+- Print-optimized: printBackground: true in CSS, solid or simple gradients only
 
-Design Style:
-- Clean, corporate aesthetic
-- Gradient backgrounds
-- Proper spacing and typography hierarchy
-- Professional but engaging visual design
-- White text on colored backgrounds for key slides
+Design Style for Professional Presentation:
+- Clean, corporate aesthetic suitable for boardrooms
+- Professional gradient backgrounds (avoid complex patterns)
+- Proper spacing: 100px padding on all slides for PDF margins
+- Typography hierarchy: H1 (72-96px), H2 (48-72px), body (36px minimum)
+- Professional color scheme with [INSERT YOUR BRAND COLORS OR "blue/purple gradients"]
+- White or light text on dark gradient backgrounds for key slides
 
-Make this presentation board-ready and suitable for executive presentation.</div>
+SIZING CRITICAL: This will be converted to PDF for presentation use. Ensure all text is large enough to read when projected and all elements fit within the 1920x1080 viewport without scrolling.
+
+Make this presentation board-ready and suitable for executive presentation in PDF format.</div>
                 <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
             </div>
 
             <div class="prompt-card">
                 <h3 class="prompt-title">⚡ Technical Architecture Deep Dive</h3>
                 <p class="prompt-desc">For technical teams, architecture reviews, and developer presentations</p>
-                <div class="prompt-code">Create a comprehensive technical architecture presentation about our microservices system as a single HTML file.
+                <div class="prompt-code">Create a comprehensive technical architecture presentation about [INSERT YOUR SYSTEM/TECHNOLOGY] as a single HTML file.
 
 Content Structure:
-- Title slide: "Microservices Architecture - Scaling for Growth"
-- System overview with component breakdown
-- API Gateway design and routing strategy
-- Database architecture (PostgreSQL + Redis + Elasticsearch)
-- Service mesh implementation with Istio
-- CI/CD pipeline and deployment strategy
-- Monitoring and observability stack
-- Performance metrics: 99.9% uptime, 50ms avg response time
-- Security implementation and best practices
-- Code example showing API endpoint implementation
+- Title slide: "[INSERT YOUR ARCHITECTURE NAME] - [INSERT SUBTITLE]"
+- System overview with [INSERT YOUR COMPONENTS] breakdown
+- [INSERT YOUR ARCHITECTURE PATTERN, e.g., "API Gateway design and routing strategy"]
+- Database architecture: [INSERT YOUR DB STACK, e.g., "PostgreSQL + Redis + Elasticsearch"]
+- [INSERT YOUR INFRASTRUCTURE, e.g., "Service mesh implementation with Istio"]
+- CI/CD pipeline and deployment strategy for [INSERT YOUR ENVIRONMENT]
+- Monitoring and observability stack: [INSERT YOUR MONITORING TOOLS]
+- Performance metrics: [INSERT YOUR METRICS, e.g., "99.9% uptime, 50ms avg response time"]
+- Security implementation and best practices for [INSERT YOUR SECURITY APPROACH]
+- Code example showing [INSERT SPECIFIC IMPLEMENTATION, e.g., "API endpoint implementation"]
 
-Technical Specifications:
-- 1920x1080px horizontal format
-- Dark theme suitable for technical audience
-- Monospace fonts for code blocks
-- Syntax highlighting using CSS classes
-- Architecture diagrams using CSS/SVG
-- All dependencies embedded in single file
-- Navigation with dots and arrow keys
+CRITICAL Technical Requirements for PDF Conversion:
+- EXACTLY 1920x1080px dimensions (width: 1920px; height: 1080px;) - essential for PDF scaling
+- Fixed viewport: body { width: 1920px; height: 1080px; overflow: hidden; position: relative; }
+- Large fonts for PDF readability: minimum 24px for code, 32px+ for body text, 64px+ for headings
+- Dark theme with HIGH CONTRAST for technical audience and PDF clarity
+- Monospace fonts for code blocks: 'SF Mono', Monaco, 'Inconsolata', 'Fira Code', monospace
+- Navigation: .slide class with .active state, showSlide(index) function, .dot navigation
+- All CSS/JavaScript embedded (no CDN links or external files)
+- Print-optimized code blocks with proper background colors
 
-Design Requirements:
-- Dark background (#1a202c or similar)
-- Green/blue accent colors for technical elements
-- Code blocks with proper syntax highlighting
-- Clean, minimal design focused on content
-- High contrast for readability
-- Professional typography hierarchy
+Design Requirements for Technical Presentations:
+- Dark background (#1a202c or similar) with light text for contrast
+- Green/blue accent colors: #48bb78 (green), #63b3ed (blue) for technical elements
+- Code syntax highlighting using CSS classes: .code-keyword, .code-string, .code-comment
+- Architecture diagrams using simple CSS/SVG (avoid complex graphics)
+- Clean, minimal design focused on technical content
+- Professional typography hierarchy optimized for developer audience
+- Proper spacing: 100px padding for PDF margins
 
-Include actual code examples with proper formatting and make it suitable for technical team presentations.</div>
+SIZING CRITICAL for Technical Audiences: 
+- Code blocks must be readable when projected (minimum 24px font size)
+- Architecture diagrams must be simple and clear in PDF format
+- All technical details must fit within 1920x1080 viewport without scrolling
+- Use high contrast colors for technical diagrams and code
+
+Include actual code examples with proper syntax highlighting and make it suitable for technical team presentations that will be converted to PDF for sharing and projection.</div>
                 <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
             </div>
 
@@ -597,166 +608,200 @@ Include actual code examples with proper formatting and make it suitable for tec
                 <div class="prompt-code">Create a mobile app launch presentation in vertical format as a single HTML file.
 
 App Details:
-- App name: "FitTracker Pro"
-- Tagline: "Your Personal Fitness Journey Starts Here"
-- Key features: Workout tracking, nutrition logging, progress analytics, social challenges
-- Target metrics: 10K+ downloads in first month, 4.8★ app store rating
-- Available on iOS and Android
+- App name: "[INSERT YOUR APP NAME]"
+- Tagline: "[INSERT YOUR COMPELLING TAGLINE]"
+- Key features: [INSERT 3-4 KEY FEATURES, e.g., "Workout tracking, nutrition logging, progress analytics, social challenges"]
+- Target metrics: [INSERT YOUR GOALS, e.g., "10K+ downloads in first month, 4.8★ app store rating"]
+- Available on: [INSERT PLATFORMS, e.g., "iOS and Android"]
 
 Content Structure:
-- Hero slide with app name and compelling tagline
-- Problem/solution narrative
-- Feature showcase with icons and descriptions
-- User testimonials or social proof
+- Hero slide with [INSERT APP NAME] and compelling tagline
+- Problem/solution narrative for [INSERT TARGET AUDIENCE]
+- Feature showcase with icons and descriptions for [INSERT KEY FEATURES]
+- User testimonials or social proof: [INSERT TESTIMONIALS OR METRICS]
 - Download call-to-action with app store buttons
 
-Technical Requirements:
-- Vertical orientation: 1080x1920px (9:16 aspect ratio)
-- Mobile-first design language
-- Bright, engaging color scheme
-- Large, touch-friendly elements
-- Navigation dots optimized for vertical scrolling
-- All CSS/JS embedded in single file
-- Smooth transitions between slides
+CRITICAL Technical Requirements for Vertical PDF Conversion:
+- EXACTLY 1080x1920px dimensions (width: 1080px; height: 1920px;) - essential for 9:16 PDF
+- Fixed vertical viewport: body { width: 1080px; height: 1920px; overflow: hidden; position: relative; }
+- Large fonts for mobile PDF viewing: minimum 48px for body text, 80px+ for headings
+- High contrast colors for PDF clarity and mobile readability
+- Navigation: .slide class with .active state, showSlide(index) function, .dot navigation
+- All CSS/JavaScript embedded in single file (no external dependencies)
+- Vertical-optimized navigation dots at bottom center
 
-Design Style:
-- Modern, mobile app aesthetic
-- Gradient backgrounds with vibrant colors
-- App store button styling
-- Clean typography with strong hierarchy
-- Engaging visual elements suitable for mobile viewing
+Design Style for Mobile Presentations:
+- Modern, mobile app aesthetic suitable for [INSERT YOUR APP CATEGORY]
+- Bright, engaging gradient backgrounds with [INSERT YOUR BRAND COLORS]
+- App store button styling with proper iOS/Android design language
+- Clean typography hierarchy: H1 (80-120px), H2 (60-80px), body (48px minimum)
+- Large, touch-friendly visual elements
+- Proper spacing: 80px padding for vertical PDF margins
 
-Make this presentation perfect for app store screenshots and investor pitches.</div>
+SIZING CRITICAL for Vertical Mobile Format:
+- All text must be readable on mobile devices and when converted to PDF
+- Feature cards and buttons must be large enough for touch interaction (minimum 60px height)
+- App store buttons must follow platform guidelines and be clearly visible
+- Content must fit within 1080x1920 viewport without horizontal scrolling
+- Use mobile-first color schemes with high contrast
+
+Make this presentation perfect for app store screenshots, investor pitches, and mobile viewing that converts beautifully to vertical PDF format.</div>
                 <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
             </div>
 
             <div class="prompt-card">
                 <h3 class="prompt-title">🎨 Marketing Campaign Launch</h3>
                 <p class="prompt-desc">For product launches, marketing campaigns, and brand presentations</p>
-                <div class="prompt-code">Create a vibrant marketing campaign presentation for our product launch as a single HTML file.
+                <div class="prompt-code">Create a vibrant marketing campaign presentation for [INSERT YOUR PRODUCT/CAMPAIGN] launch as a single HTML file.
 
 Campaign Details:
-- Product: "EcoClean Pro" - sustainable cleaning solution
-- Campaign theme: "Clean Living, Clean Planet"
-- Target audience: environmentally conscious millennials
-- Channels: social media, influencer partnerships, retail displays
-- Budget: $150K total campaign spend
-- Timeline: 6-week launch campaign
+- Product: "[INSERT PRODUCT NAME]" - [INSERT PRODUCT DESCRIPTION]
+- Campaign theme: "[INSERT CAMPAIGN THEME/TAGLINE]"
+- Target audience: [INSERT TARGET DEMOGRAPHIC, e.g., "environmentally conscious millennials"]
+- Channels: [INSERT MARKETING CHANNELS, e.g., "social media, influencer partnerships, retail displays"]
+- Budget: [INSERT BUDGET AMOUNT] total campaign spend
+- Timeline: [INSERT CAMPAIGN DURATION, e.g., "6-week launch campaign"]
 
 Content Structure:
-- Hero slide with product and campaign theme
-- Market opportunity and target audience
-- Product benefits and differentiators
-- Campaign strategy across channels
-- Creative concepts and visual direction
-- Success metrics and KPIs
+- Hero slide with [INSERT PRODUCT NAME] and campaign theme
+- Market opportunity and target audience: [INSERT MARKET SIZE/OPPORTUNITY]
+- Product benefits and differentiators: [INSERT KEY SELLING POINTS]
+- Campaign strategy across [INSERT YOUR CHANNELS]
+- Creative concepts and visual direction for [INSERT BRAND STYLE]
+- Success metrics and KPIs: [INSERT YOUR METRICS]
 - Call-to-action for team alignment
 
-Technical Requirements:
-- 1920x1080px horizontal format
-- Vibrant, brand-appropriate color scheme
-- Large, engaging visuals and typography
-- Professional marketing design aesthetic
-- Navigation with dots and keyboard support
-- All resources embedded in single file
+CRITICAL Technical Requirements for PDF Conversion:
+- EXACTLY 1920x1080px dimensions (width: 1920px; height: 1080px;) - essential for PDF scaling
+- Fixed viewport: body { width: 1920px; height: 1080px; overflow: hidden; position: relative; }
+- Large fonts for presentation readability: minimum 36px for body text, 72px+ for headings
+- Vibrant, high-contrast colors suitable for both screen and PDF viewing
+- Navigation: .slide class with .active state, showSlide(index) function, .dot navigation
+- All CSS/JavaScript embedded in single file (no external dependencies)
+- Print-optimized gradients and colors for PDF quality
 
-Design Style:
-- Bold, energetic visual design
-- Green/eco-friendly color palette
-- Modern typography with strong hierarchy
-- Product-focused imagery placeholders
-- Call-to-action buttons and elements
-- Marketing-appropriate styling
+Design Style for Marketing Presentations:
+- Bold, energetic visual design suitable for [INSERT YOUR BRAND/INDUSTRY]
+- Brand-appropriate color palette: [INSERT YOUR BRAND COLORS OR "vibrant, engaging colors"]
+- Modern typography hierarchy: H1 (72-108px), H2 (48-72px), body (36px minimum)
+- Product-focused visual elements and imagery placeholders
+- Call-to-action buttons with strong contrast and large size (minimum 48px font)
+- Marketing-appropriate styling that converts well to PDF
+- Proper spacing: 100px padding for PDF margins
 
-Make this presentation engaging and suitable for stakeholder buy-in and team rallying.</div>
+SIZING CRITICAL for Marketing Impact:
+- All text must be readable when projected in meetings and boardrooms
+- Call-to-action elements must be prominent and visible in PDF format
+- Product visuals and branding must be clear and impactful
+- Content must fit within 1920x1080 viewport without scrolling
+- Use high-energy colors that maintain impact in PDF conversion
+
+Make this presentation engaging for stakeholder buy-in, team rallying, and suitable for PDF distribution to partners and clients.</div>
                 <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
             </div>
 
             <div class="prompt-card">
                 <h3 class="prompt-title">🎓 Educational Workshop</h3>
                 <p class="prompt-desc">For training materials, workshops, and educational content</p>
-                <div class="prompt-code">Create an educational presentation about "Introduction to Machine Learning" as a single HTML file.
+                <div class="prompt-code">Create an educational presentation about "[INSERT YOUR TOPIC]" as a single HTML file.
 
 Learning Objectives:
-- Understand what machine learning is and isn't
-- Learn the three main types of ML (supervised, unsupervised, reinforcement)
-- Explore real-world applications and use cases
-- Understand the basic workflow of an ML project
-- Know when to use ML vs traditional programming
+- [INSERT LEARNING OBJECTIVE 1, e.g., "Understand what machine learning is and isn't"]
+- [INSERT LEARNING OBJECTIVE 2, e.g., "Learn the three main types of ML"]
+- [INSERT LEARNING OBJECTIVE 3, e.g., "Explore real-world applications and use cases"]
+- [INSERT LEARNING OBJECTIVE 4, e.g., "Understand the basic workflow"]
+- [INSERT LEARNING OBJECTIVE 5, e.g., "Know when to use ML vs traditional programming"]
 
 Content Structure:
-- Title slide with course name and objectives
-- What is Machine Learning? (definition and examples)
-- Types of Machine Learning with visual examples
-- Real-world applications across industries
-- ML project workflow and methodology
-- Common pitfalls and best practices
-- Resources for further learning
+- Title slide with "[INSERT COURSE NAME]" and objectives
+- [INSERT FOUNDATIONAL CONCEPT, e.g., "What is Machine Learning? (definition and examples)"]
+- [INSERT KEY CONCEPTS with visual examples]
+- Real-world applications in [INSERT RELEVANT INDUSTRIES]
+- [INSERT WORKFLOW/METHODOLOGY] and best practices
+- Common pitfalls and troubleshooting for [INSERT TOPIC]
+- Resources for further learning in [INSERT FIELD]
 - Q&A and next steps
 
-Technical Requirements:
-- 1920x1080px horizontal format
-- Clean, academic design suitable for learning
-- Clear typography hierarchy for readability
-- Consistent color scheme throughout
-- Navigation with progress indicators
-- All content embedded in single file
+CRITICAL Technical Requirements for Educational PDF Conversion:
+- EXACTLY 1920x1080px dimensions (width: 1920px; height: 1080px;) - essential for PDF scaling
+- Fixed viewport: body { width: 1920px; height: 1080px; overflow: hidden; position: relative; }
+- Large fonts for classroom readability: minimum 32px for body text, 64px+ for headings
+- Clean, high-contrast colors suitable for both screen and PDF printing
+- Navigation: .slide class with .active state, showSlide(index) function, .dot navigation
+- All CSS/JavaScript embedded in single file (no external dependencies)
+- Print-optimized for educational handouts and student reference
 
-Design Style:
-- Professional educational aesthetic
-- Blue/white color scheme for trustworthiness
-- Clear, readable fonts (minimum 32px for content)
-- Ample white space for easy reading
-- Visual diagrams and examples
-- Academic presentation styling
+Design Style for Educational Content:
+- Professional educational aesthetic suitable for [INSERT LEARNING ENVIRONMENT]
+- Clean color scheme: [INSERT APPROPRIATE COLORS, e.g., "blue/white for trustworthiness"]
+- Clear typography hierarchy: H1 (64-84px), H2 (48-64px), body (32px minimum)
+- Ample white space for easy reading and note-taking
+- Visual diagrams and examples that are simple and clear
+- Academic presentation styling optimized for learning
+- Proper spacing: 100px padding for PDF margins and printing
 
-Make this suitable for both in-person workshops and online learning environments.</div>
+SIZING CRITICAL for Educational Use:
+- All text must be readable from the back of a classroom
+- Diagrams and visual examples must be clear when converted to PDF
+- Learning objectives and key points must be prominent and visible
+- Content must fit within 1920x1080 viewport for projector compatibility
+- Use educational-appropriate colors that work well in various lighting conditions
+
+Make this suitable for both in-person workshops, online learning environments, and PDF handout distribution to students.</div>
                 <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
             </div>
 
             <div class="prompt-card">
                 <h3 class="prompt-title">💰 Investor Pitch Deck</h3>
                 <p class="prompt-desc">For fundraising, investor meetings, and startup pitches</p>
-                <div class="prompt-code">Create a compelling investor pitch deck for our Series A fundraising as a single HTML file.
+                <div class="prompt-code">Create a compelling investor pitch deck for [INSERT YOUR COMPANY] [INSERT FUNDING ROUND] fundraising as a single HTML file.
 
 Company Details:
-- Company: "DataFlow AI" - AI-powered business intelligence platform
-- Funding goal: $3M Series A
-- Current traction: $120K MRR, 85 enterprise customers
-- Team: 12 employees, strong technical and business backgrounds
-- Market: $45B business intelligence market
+- Company: "[INSERT COMPANY NAME]" - [INSERT COMPANY DESCRIPTION]
+- Funding goal: [INSERT FUNDING AMOUNT] [INSERT ROUND TYPE]
+- Current traction: [INSERT REVENUE/METRICS, e.g., "$120K MRR, 85 enterprise customers"]
+- Team: [INSERT TEAM SIZE AND BACKGROUND]
+- Market: [INSERT MARKET SIZE AND DESCRIPTION]
 
 Content Structure:
-- Title slide with company name and funding goal
-- Problem statement with market pain points
-- Solution overview and product demo
-- Market size and opportunity
-- Business model and revenue streams
-- Traction metrics and growth trajectory
-- Competition and differentiation
-- Financial projections and unit economics
-- Team introductions and credentials
-- Funding ask and use of funds
+- Title slide with [INSERT COMPANY NAME] and funding goal
+- Problem statement with [INSERT SPECIFIC MARKET PAIN POINTS]
+- Solution overview and [INSERT PRODUCT/SERVICE] demo
+- Market size and opportunity in [INSERT TARGET MARKET]
+- Business model and revenue streams: [INSERT REVENUE MODEL]
+- Traction metrics and growth trajectory: [INSERT KEY METRICS]
+- Competition and differentiation: [INSERT COMPETITIVE ADVANTAGES]
+- Financial projections and unit economics for [INSERT BUSINESS MODEL]
+- Team introductions and credentials: [INSERT KEY TEAM MEMBERS]
+- Funding ask and use of funds: [INSERT FUNDING BREAKDOWN]
 - Contact information and next steps
 
-Technical Requirements:
-- 1920x1080px horizontal format
-- Professional, investor-appropriate design
-- Clean typography with strong data visualization
-- Charts and graphs for metrics display
-- Dark/professional color scheme
-- Navigation optimized for presentation flow
-- All content embedded for offline use
+CRITICAL Technical Requirements for Investor PDF Conversion:
+- EXACTLY 1920x1080px dimensions (width: 1920px; height: 1080px;) - essential for PDF scaling
+- Fixed viewport: body { width: 1920px; height: 1080px; overflow: hidden; position: relative; }
+- Large fonts for boardroom readability: minimum 36px for body text, 72px+ for headings
+- Professional, high-contrast colors suitable for both screen and PDF printing
+- Navigation: .slide class with .active state, showSlide(index) function, .dot navigation
+- All CSS/JavaScript embedded in single file for offline investor presentations
+- Print-optimized charts and data visualizations
 
-Design Style:
-- Sophisticated, professional aesthetic
-- Data-driven visual design
-- Strong contrast for readability
-- Minimal distractions from content
-- Investor-grade quality and polish
-- Consistent branding throughout
+Design Style for Investor Presentations:
+- Sophisticated, professional aesthetic suitable for [INSERT INVESTOR TYPE]
+- Clean, data-driven visual design with [INSERT BRAND COLORS OR "professional color scheme"]
+- Strong typography hierarchy: H1 (72-96px), H2 (48-72px), body (36px minimum)
+- Minimal distractions from content and financial data
+- Investor-grade quality and polish suitable for due diligence
+- Consistent branding throughout: [INSERT BRAND GUIDELINES]
+- Proper spacing: 100px padding for PDF margins and printing
 
-Make this presentation compelling enough to secure investor meetings and funding commitments.</div>
+SIZING CRITICAL for Investor Meetings:
+- All financial data and metrics must be clearly readable when projected
+- Charts and graphs must be simple and clear when converted to PDF
+- Key value propositions must be prominent and memorable
+- Content must fit within 1920x1080 viewport for standard projectors
+- Use professional colors that convey trust and competence
+
+Make this presentation compelling enough to secure investor meetings, due diligence sessions, and funding commitments that can be shared as PDF with potential investors.</div>
                 <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
             </div>
         </div>
