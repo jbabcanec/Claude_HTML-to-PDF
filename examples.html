@@ -519,6 +519,80 @@
             </div>
 
             <div class="prompt-card">
+                <h3 class="prompt-title">🚀 Universal Data Dump Converter</h3>
+                <p class="prompt-desc">Paste any unstructured notes, data, or information and Claude will organize it into a professional presentation</p>
+                <div class="prompt-code">I have a collection of unstructured notes, data, and information that I need turned into a professional presentation. Please analyze the content below and create a well-organized, visually appealing HTML presentation as a single self-contained file.
+
+PASTE YOUR UNSTRUCTURED DATA/NOTES HERE:
+[PASTE ALL YOUR NOTES, BULLET POINTS, IDEAS, DATA, MEETING NOTES, RESEARCH, OR ANY CONTENT HERE - CLAUDE WILL ORGANIZE IT]
+
+CRITICAL Technical Requirements for PDF Conversion:
+- EXACTLY 1920x1080px dimensions (width: 1920px; height: 1080px;) for horizontal presentations
+- OR EXACTLY 1080x1920px dimensions (width: 1080px; height: 1920px;) for vertical/mobile presentations
+- Fixed viewport: body { width: [dimension]px; height: [dimension]px; overflow: hidden; position: relative; }
+- Large, PDF-readable fonts: minimum 36px for body text, 72px+ for headings
+- High contrast colors for PDF clarity and professional appearance
+- Navigation: .slide class with .active state, showSlide(index) function, clickable .dot navigation
+- All CSS and JavaScript embedded in single HTML file (no external dependencies)
+- Print-optimized design for PDF conversion
+
+Your Task:
+1. ANALYZE the unstructured content and identify key themes, data points, and logical flow
+2. CREATE an appropriate presentation structure (business, technical, educational, etc.)
+3. ORGANIZE the information into logical slides with clear hierarchy
+4. DESIGN appropriate styling based on the content type (corporate, technical, creative, etc.)
+5. ENSURE all content fits properly within the viewport dimensions
+6. OPTIMIZE for PDF conversion with proper fonts, colors, and spacing
+
+Presentation Requirements:
+- Create a compelling title slide based on the main theme
+- Organize content into 6-12 slides with logical flow
+- Use appropriate visual hierarchy and typography
+- Include proper spacing: 100px padding for PDF margins
+- Design style should match the content type (business/technical/educational)
+- Ensure all text is readable when converted to PDF and projected
+- Add navigation dots for slide progression
+
+Make this presentation professional, well-structured, and ready for PDF conversion regardless of how messy or unorganized the input data is.</div>
+                <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
+            </div>
+
+            <div class="prompt-card">
+                <h3 class="prompt-title">📋 Quick Meeting Notes to Presentation</h3>
+                <p class="prompt-desc">Transform messy meeting notes, brainstorm sessions, or research into a structured presentation</p>
+                <div class="prompt-code">Convert my messy notes/data into a clean, professional presentation. I'm dumping everything below - please organize it intelligently.
+
+MY NOTES/DATA/CONTENT:
+[DUMP EVERYTHING HERE - meeting notes, random thoughts, bullet points, data, URLs, quotes, anything...]
+
+PRESENTATION CONTEXT (optional - fill out what you know):
+- Audience: [who will see this? executives, team, clients, students, etc.]
+- Purpose: [what's the goal? inform, persuade, educate, update, etc.]  
+- Time limit: [how long should this be? 5 min, 15 min, 30 min presentation]
+- Format preference: [horizontal for projectors, vertical for mobile/social]
+
+TECHNICAL REQUIREMENTS - CRITICAL FOR PDF CONVERSION:
+- Create as single HTML file with exact dimensions: 1920x1080px (horizontal) or 1080x1920px (vertical)
+- Use fixed viewport: body { width: XXXXpx; height: XXXXpx; overflow: hidden; }
+- Large fonts for PDF: 36px+ body text, 72px+ headings, 24px+ for technical content
+- High contrast colors that work in PDF format
+- Embedded CSS/JS only (no external links)
+- .slide/.active navigation with showSlide(index) function
+
+WHAT I NEED YOU TO DO:
+1. Read through my messy content and extract the key information
+2. Identify the main story/narrative/flow
+3. Create appropriate slide structure (title, agenda, content slides, conclusion)
+4. Choose presentation style that fits the content (business, technical, creative, etc.)
+5. Organize information with clear hierarchy and visual appeal
+6. Ensure everything is sized properly for PDF conversion and projection
+7. Make it look professional even if my notes were chaotic
+
+Create a presentation that flows logically and looks professional, regardless of how unstructured my input is!</div>
+                <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
+            </div>
+
+            <div class="prompt-card">
                 <h3 class="prompt-title">🏢 Business Quarterly Review</h3>
                 <p class="prompt-desc">Perfect for executive presentations, board meetings, and stakeholder updates</p>
                 <div class="prompt-code">Create a professional business presentation about [INSERT YOUR COMPANY/TOPIC] Q4 2024 performance as a single, self-contained HTML file.
