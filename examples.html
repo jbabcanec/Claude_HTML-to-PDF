@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templates & Examples - Claude HTML to PDF</title>
+    <link rel="stylesheet" href="web/assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .examples-header {
+            padding: 60px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .examples-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .examples-header p {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .template-section {
+            padding: 80px 0;
+        }
+
+        .template-section:nth-child(even) {
+            background: #f7fafc;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .template-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .template-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .template-preview {
+            height: 220px;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .template-preview svg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .template-content {
+            padding: 30px;
+        }
+
+        .template-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .template-desc {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .template-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .feature-tag {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .template-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .template-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            text-align: center;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a4fcf;
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: #ddd6c7;
+        }
+
+        .prompts-section {
+            padding: 80px 0;
+            background: var(--background);
+        }
+
+        .prompt-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .prompt-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .prompt-desc {
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .prompt-code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        .copy-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #c49060;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 36px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .nav-breadcrumb {
+            padding: 20px 0;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="#E8E3DD"/>
+                    <path d="M20 10L28 15V25L20 30L12 25V15L20 10Z" stroke="#6B5B4F" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M20 10V20M20 20L12 15M20 20L28 15" stroke="#6B5B4F" stroke-width="2" stroke-linejoin="round"/>
+                </svg>
+                <h1>Claude HTML to PDF</h1>
+            </div>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="examples.html">Templates & Examples</a>
+                <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF" target="_blank">GitHub</a>
+            </nav>
+        </header>
+    </div>
+
+    <div class="nav-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="index.html">Home</a>
+                <span>›</span>
+                <span>Templates & Examples</span>
+            </div>
+        </div>
+    </div>
+
+    <section class="examples-header">
+        <div class="container">
+            <h1>Templates & Sample Prompts</h1>
+            <p>Professional presentation templates and proven Claude AI prompts for creating stunning presentations</p>
+        </div>
+    </section>
+
+    <section class="template-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Horizontal Templates (16:9)</h2>
+                <p>Perfect for business presentations, technical documentation, and desktop viewing</p>
+            </div>
+            
+            <div class="template-grid">
+                <!-- Business Template -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="320" height="180" fill="#667eea"/>
+                            <rect x="20" y="20" width="280" height="40" rx="8" fill="rgba(255,255,255,0.2)"/>
+                            <rect x="20" y="80" width="200" height="20" rx="4" fill="rgba(255,255,255,0.3)"/>
+                            <rect x="20" y="110" width="240" height="20" rx="4" fill="rgba(255,255,255,0.3)"/>
+                            <rect x="20" y="140" width="180" height="20" rx="4" fill="rgba(255,255,255,0.3)"/>
+                        </svg>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">Business Presentation</h3>
+                        <p class="template-desc">Professional corporate template with gradient backgrounds, metrics displays, and executive-ready styling.</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Gradient Backgrounds</span>
+                            <span class="feature-tag">Metrics Display</span>
+                            <span class="feature-tag">Professional</span>
+                        </div>
+                        <div class="template-actions">
+                            <a href="templates/horizontal/business-template.html" class="template-btn btn-primary" download>Download</a>
+                            <a href="examples/business-presentation.html" class="template-btn btn-secondary" target="_blank">Preview</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Template -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="320" height="180" fill="#1a202c"/>
+                            <rect x="20" y="20" width="280" height="30" rx="4" fill="#48bb78"/>
+                            <rect x="20" y="60" width="280" height="60" rx="4" fill="#2d3748"/>
+                            <text x="30" y="85" fill="#63b3ed" font-family="monospace" font-size="12">const converter = new PDF();</text>
+                            <text x="30" y="105" fill="#63b3ed" font-family="monospace" font-size="12">converter.process(html);</text>
+                            <rect x="20" y="130" width="120" height="30" rx="4" fill="#4a5568"/>
+                            <rect x="150" y="130" width="150" height="30" rx="4" fill="#4a5568"/>
+                        </svg>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">Technical Documentation</h3>
+                        <p class="template-desc">Dark theme template with syntax highlighting, architecture diagrams, and developer-focused design.</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Dark Theme</span>
+                            <span class="feature-tag">Syntax Highlighting</span>
+                            <span class="feature-tag">Code Blocks</span>
+                        </div>
+                        <div class="template-actions">
+                            <a href="templates/horizontal/tech-template.html" class="template-btn btn-primary" download>Download</a>
+                            <a href="examples/technical-presentation.html" class="template-btn btn-secondary" target="_blank">Preview</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Marketing Template -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="320" height="180" fill="#ff6b6b"/>
+                            <rect x="40" y="40" width="240" height="30" rx="15" fill="rgba(255,255,255,0.2)"/>
+                            <rect x="60" y="80" width="60" height="60" rx="30" fill="rgba(255,255,255,0.3)"/>
+                            <rect x="130" y="80" width="60" height="60" rx="30" fill="rgba(255,255,255,0.3)"/>
+                            <rect x="200" y="80" width="60" height="60" rx="30" fill="rgba(255,255,255,0.3)"/>
+                            <rect x="100" y="150" width="120" height="20" rx="10" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">Marketing Campaign</h3>
+                        <p class="template-desc">Vibrant template for product launches, marketing campaigns, and brand presentations.</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Vibrant Colors</span>
+                            <span class="feature-tag">Product Focus</span>
+                            <span class="feature-tag">Call-to-Action</span>
+                        </div>
+                        <div class="template-actions">
+                            <a href="templates/horizontal/marketing-template.html" class="template-btn btn-primary" download>Download</a>
+                            <a href="#" class="template-btn btn-secondary" onclick="alert('Preview coming soon!')">Preview</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education Template -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="320" height="180" fill="#4facfe"/>
+                            <rect x="20" y="20" width="280" height="25" rx="4" fill="rgba(255,255,255,0.3)"/>
+                            <rect x="20" y="55" width="130" height="80" rx="8" fill="rgba(255,255,255,0.2)"/>
+                            <rect x="170" y="55" width="130" height="80" rx="8" fill="rgba(255,255,255,0.2)"/>
+                            <rect x="20" y="145" width="280" height="15" rx="4" fill="rgba(255,255,255,0.4)"/>
+                        </svg>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">Educational Content</h3>
+                        <p class="template-desc">Clean, academic template perfect for educational content, training materials, and workshops.</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Clean Design</span>
+                            <span class="feature-tag">Academic Style</span>
+                            <span class="feature-tag">Learning Focus</span>
+                        </div>
+                        <div class="template-actions">
+                            <a href="#" class="template-btn btn-primary" onclick="alert('Coming soon!')">Download</a>
+                            <a href="#" class="template-btn btn-secondary" onclick="alert('Preview coming soon!')">Preview</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Investor Pitch Template -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="320" height="180" fill="#2d3748"/>
+                            <rect x="20" y="20" width="280" height="35" rx="6" fill="#48bb78"/>
+                            <rect x="20" y="70" width="90" height="80" rx="8" fill="#4a5568"/>
+                            <rect x="120" y="70" width="90" height="80" rx="8" fill="#4a5568"/>
+                            <rect x="220" y="70" width="80" height="80" rx="8" fill="#4a5568"/>
+                            <text x="30" y="45" fill="white" font-size="14" font-weight="bold">$2.5M Series A</text>
+                        </svg>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">Investor Pitch</h3>
+                        <p class="template-desc">Professional pitch deck template with financial metrics, traction displays, and investor-focused layout.</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Financial Focus</span>
+                            <span class="feature-tag">Metrics Display</span>
+                            <span class="feature-tag">Professional</span>
+                        </div>
+                        <div class="template-actions">
+                            <a href="#" class="template-btn btn-primary" onclick="alert('Coming soon!')">Download</a>
+                            <a href="#" class="template-btn btn-secondary" onclick="alert('Preview coming soon!')">Preview</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="template-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Vertical Templates (9:16)</h2>
+                <p>Optimized for mobile viewing, social media, and portrait-oriented content</p>
+            </div>
+            
+            <div class="template-grid">
+                <!-- Mobile App Template -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <svg viewBox="0 0 180 320" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="180" height="320" fill="#667eea"/>
+                            <rect x="20" y="40" width="140" height="60" rx="8" fill="rgba(255,255,255,0.2)"/>
+                            <rect x="20" y="120" width="140" height="40" rx="20" fill="rgba(255,255,255,0.3)"/>
+                            <rect x="20" y="180" width="140" height="40" rx="20" fill="rgba(255,255,255,0.3)"/>
+                            <rect x="20" y="240" width="140" height="40" rx="20" fill="rgba(255,255,255,0.3)"/>
+                            <rect x="50" y="290" width="80" height="20" rx="10" fill="white"/>
+                        </svg>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">Mobile App Showcase</h3>
+                        <p class="template-desc">Perfect for app launches, feature presentations, and mobile product showcases.</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Mobile Optimized</span>
+                            <span class="feature-tag">App Store Ready</span>
+                            <span class="feature-tag">Feature Focus</span>
+                        </div>
+                        <div class="template-actions">
+                            <a href="templates/vertical/mobile-app-template.html" class="template-btn btn-primary" download>Download</a>
+                            <a href="examples/vertical-presentation.html" class="template-btn btn-secondary" target="_blank">Preview</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Media Template -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <svg viewBox="0 0 180 320" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="180" height="320" fill="#ff9a9e"/>
+                            <rect x="20" y="40" width="140" height="50" rx="8" fill="rgba(255,255,255,0.3)"/>
+                            <rect x="20" y="110" width="140" height="30" rx="15" fill="rgba(255,255,255,0.2)"/>
+                            <rect x="20" y="160" width="140" height="100" rx="12" fill="rgba(255,255,255,0.2)"/>
+                            <rect x="30" y="280" width="50" height="25" rx="12" fill="#333"/>
+                            <rect x="90" y="280" width="50" height="25" rx="12" fill="#e1306c"/>
+                        </svg>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">Social Media Content</h3>
+                        <p class="template-desc">Instagram-ready template for social media campaigns, brand content, and influencer presentations.</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Social Ready</span>
+                            <span class="feature-tag">Brand Focus</span>
+                            <span class="feature-tag">Engagement</span>
+                        </div>
+                        <div class="template-actions">
+                            <a href="templates/vertical/social-media-template.html" class="template-btn btn-primary" download>Download</a>
+                            <a href="#" class="template-btn btn-secondary" onclick="alert('Preview coming soon!')">Preview</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portfolio Template -->
+                <div class="template-card">
+                    <div class="template-preview">
+                        <svg viewBox="0 0 180 320" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="180" height="320" fill="#a8edea"/>
+                            <rect x="20" y="30" width="140" height="40" rx="6" fill="rgba(0,0,0,0.1)"/>
+                            <rect x="20" y="90" width="140" height="80" rx="8" fill="rgba(0,0,0,0.1)"/>
+                            <rect x="20" y="190" width="140" height="80" rx="8" fill="rgba(0,0,0,0.1)"/>
+                            <rect x="40" y="290" width="100" height="20" rx="4" fill="rgba(0,0,0,0.2)"/>
+                        </svg>
+                    </div>
+                    <div class="template-content">
+                        <h3 class="template-title">Creative Portfolio</h3>
+                        <p class="template-desc">Showcase creative work, design projects, and artistic presentations with style.</p>
+                        <div class="template-features">
+                            <span class="feature-tag">Creative Focus</span>
+                            <span class="feature-tag">Portfolio Style</span>
+                            <span class="feature-tag">Visual Heavy</span>
+                        </div>
+                        <div class="template-actions">
+                            <a href="#" class="template-btn btn-primary" onclick="alert('Coming soon!')">Download</a>
+                            <a href="#" class="template-btn btn-secondary" onclick="alert('Preview coming soon!')">Preview</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="prompts-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Claude AI Prompts</h2>
+                <p>Copy and paste these proven prompts to get Claude to create perfect presentations</p>
+            </div>
+
+            <div class="prompt-card">
+                <h3 class="prompt-title">🏢 Business Quarterly Review</h3>
+                <p class="prompt-desc">Perfect for executive presentations, board meetings, and stakeholder updates</p>
+                <div class="prompt-code">Create a professional business presentation about our Q4 2024 performance as a single, self-contained HTML file.
+
+Content Requirements:
+- Title slide: "Q4 2024 Business Review - Exceeding Expectations"
+- Agenda slide with 5 key topics
+- Revenue slide showing $2.3M quarterly revenue (up 34% YoY)
+- Customer growth: 1,250 new customers, 23% retention rate improvement
+- Product achievements: 3 major feature launches, 99.9% uptime
+- Team accomplishments: 5 new hires, 2 promotions, team satisfaction 8.7/10
+- 2025 outlook: expansion goals, new market entry, Series B funding
+- Thank you/Q&A slide
+
+Technical Requirements:
+- Exactly 1920x1080px dimensions for horizontal viewing
+- Professional color scheme with blue/purple gradients
+- Large, readable fonts (minimum 36px for body text)
+- Navigation dots and keyboard arrow support
+- All CSS and JavaScript embedded (no external files)
+- Use showSlide() function and .slide/.active classes
+- Optimize for PDF conversion with high contrast
+
+Design Style:
+- Clean, corporate aesthetic
+- Gradient backgrounds
+- Proper spacing and typography hierarchy
+- Professional but engaging visual design
+- White text on colored backgrounds for key slides
+
+Make this presentation board-ready and suitable for executive presentation.</div>
+                <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
+            </div>
+
+            <div class="prompt-card">
+                <h3 class="prompt-title">⚡ Technical Architecture Deep Dive</h3>
+                <p class="prompt-desc">For technical teams, architecture reviews, and developer presentations</p>
+                <div class="prompt-code">Create a comprehensive technical architecture presentation about our microservices system as a single HTML file.
+
+Content Structure:
+- Title slide: "Microservices Architecture - Scaling for Growth"
+- System overview with component breakdown
+- API Gateway design and routing strategy
+- Database architecture (PostgreSQL + Redis + Elasticsearch)
+- Service mesh implementation with Istio
+- CI/CD pipeline and deployment strategy
+- Monitoring and observability stack
+- Performance metrics: 99.9% uptime, 50ms avg response time
+- Security implementation and best practices
+- Code example showing API endpoint implementation
+
+Technical Specifications:
+- 1920x1080px horizontal format
+- Dark theme suitable for technical audience
+- Monospace fonts for code blocks
+- Syntax highlighting using CSS classes
+- Architecture diagrams using CSS/SVG
+- All dependencies embedded in single file
+- Navigation with dots and arrow keys
+
+Design Requirements:
+- Dark background (#1a202c or similar)
+- Green/blue accent colors for technical elements
+- Code blocks with proper syntax highlighting
+- Clean, minimal design focused on content
+- High contrast for readability
+- Professional typography hierarchy
+
+Include actual code examples with proper formatting and make it suitable for technical team presentations.</div>
+                <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
+            </div>
+
+            <div class="prompt-card">
+                <h3 class="prompt-title">📱 Mobile App Launch</h3>
+                <p class="prompt-desc">Vertical format for mobile app showcases and product launches</p>
+                <div class="prompt-code">Create a mobile app launch presentation in vertical format as a single HTML file.
+
+App Details:
+- App name: "FitTracker Pro"
+- Tagline: "Your Personal Fitness Journey Starts Here"
+- Key features: Workout tracking, nutrition logging, progress analytics, social challenges
+- Target metrics: 10K+ downloads in first month, 4.8★ app store rating
+- Available on iOS and Android
+
+Content Structure:
+- Hero slide with app name and compelling tagline
+- Problem/solution narrative
+- Feature showcase with icons and descriptions
+- User testimonials or social proof
+- Download call-to-action with app store buttons
+
+Technical Requirements:
+- Vertical orientation: 1080x1920px (9:16 aspect ratio)
+- Mobile-first design language
+- Bright, engaging color scheme
+- Large, touch-friendly elements
+- Navigation dots optimized for vertical scrolling
+- All CSS/JS embedded in single file
+- Smooth transitions between slides
+
+Design Style:
+- Modern, mobile app aesthetic
+- Gradient backgrounds with vibrant colors
+- App store button styling
+- Clean typography with strong hierarchy
+- Engaging visual elements suitable for mobile viewing
+
+Make this presentation perfect for app store screenshots and investor pitches.</div>
+                <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
+            </div>
+
+            <div class="prompt-card">
+                <h3 class="prompt-title">🎨 Marketing Campaign Launch</h3>
+                <p class="prompt-desc">For product launches, marketing campaigns, and brand presentations</p>
+                <div class="prompt-code">Create a vibrant marketing campaign presentation for our product launch as a single HTML file.
+
+Campaign Details:
+- Product: "EcoClean Pro" - sustainable cleaning solution
+- Campaign theme: "Clean Living, Clean Planet"
+- Target audience: environmentally conscious millennials
+- Channels: social media, influencer partnerships, retail displays
+- Budget: $150K total campaign spend
+- Timeline: 6-week launch campaign
+
+Content Structure:
+- Hero slide with product and campaign theme
+- Market opportunity and target audience
+- Product benefits and differentiators
+- Campaign strategy across channels
+- Creative concepts and visual direction
+- Success metrics and KPIs
+- Call-to-action for team alignment
+
+Technical Requirements:
+- 1920x1080px horizontal format
+- Vibrant, brand-appropriate color scheme
+- Large, engaging visuals and typography
+- Professional marketing design aesthetic
+- Navigation with dots and keyboard support
+- All resources embedded in single file
+
+Design Style:
+- Bold, energetic visual design
+- Green/eco-friendly color palette
+- Modern typography with strong hierarchy
+- Product-focused imagery placeholders
+- Call-to-action buttons and elements
+- Marketing-appropriate styling
+
+Make this presentation engaging and suitable for stakeholder buy-in and team rallying.</div>
+                <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
+            </div>
+
+            <div class="prompt-card">
+                <h3 class="prompt-title">🎓 Educational Workshop</h3>
+                <p class="prompt-desc">For training materials, workshops, and educational content</p>
+                <div class="prompt-code">Create an educational presentation about "Introduction to Machine Learning" as a single HTML file.
+
+Learning Objectives:
+- Understand what machine learning is and isn't
+- Learn the three main types of ML (supervised, unsupervised, reinforcement)
+- Explore real-world applications and use cases
+- Understand the basic workflow of an ML project
+- Know when to use ML vs traditional programming
+
+Content Structure:
+- Title slide with course name and objectives
+- What is Machine Learning? (definition and examples)
+- Types of Machine Learning with visual examples
+- Real-world applications across industries
+- ML project workflow and methodology
+- Common pitfalls and best practices
+- Resources for further learning
+- Q&A and next steps
+
+Technical Requirements:
+- 1920x1080px horizontal format
+- Clean, academic design suitable for learning
+- Clear typography hierarchy for readability
+- Consistent color scheme throughout
+- Navigation with progress indicators
+- All content embedded in single file
+
+Design Style:
+- Professional educational aesthetic
+- Blue/white color scheme for trustworthiness
+- Clear, readable fonts (minimum 32px for content)
+- Ample white space for easy reading
+- Visual diagrams and examples
+- Academic presentation styling
+
+Make this suitable for both in-person workshops and online learning environments.</div>
+                <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
+            </div>
+
+            <div class="prompt-card">
+                <h3 class="prompt-title">💰 Investor Pitch Deck</h3>
+                <p class="prompt-desc">For fundraising, investor meetings, and startup pitches</p>
+                <div class="prompt-code">Create a compelling investor pitch deck for our Series A fundraising as a single HTML file.
+
+Company Details:
+- Company: "DataFlow AI" - AI-powered business intelligence platform
+- Funding goal: $3M Series A
+- Current traction: $120K MRR, 85 enterprise customers
+- Team: 12 employees, strong technical and business backgrounds
+- Market: $45B business intelligence market
+
+Content Structure:
+- Title slide with company name and funding goal
+- Problem statement with market pain points
+- Solution overview and product demo
+- Market size and opportunity
+- Business model and revenue streams
+- Traction metrics and growth trajectory
+- Competition and differentiation
+- Financial projections and unit economics
+- Team introductions and credentials
+- Funding ask and use of funds
+- Contact information and next steps
+
+Technical Requirements:
+- 1920x1080px horizontal format
+- Professional, investor-appropriate design
+- Clean typography with strong data visualization
+- Charts and graphs for metrics display
+- Dark/professional color scheme
+- Navigation optimized for presentation flow
+- All content embedded for offline use
+
+Design Style:
+- Sophisticated, professional aesthetic
+- Data-driven visual design
+- Strong contrast for readability
+- Minimal distractions from content
+- Investor-grade quality and polish
+- Consistent branding throughout
+
+Make this presentation compelling enough to secure investor meetings and funding commitments.</div>
+                <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling)">Copy Prompt</button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>About</h4>
+                <p>Claude HTML to PDF is an open-source tool for converting AI-generated presentations into professional PDFs.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <a href="index.html">Main Converter</a>
+                <a href="examples.html">Templates & Examples</a>
+                <a href="docs/PROMPTING_GUIDE.md">Prompting Guide</a>
+                <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF">GitHub Repository</a>
+            </div>
+            <div class="footer-section">
+                <h4>CLI Usage</h4>
+                <code>npm install -g claude-html-to-pdf</code>
+                <code>claude-pdf convert presentation.html</code>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Claude HTML to PDF. MIT License.</p>
+        </div>
+    </footer>
+
+    <script>
+        function copyToClipboard(element) {
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const button = element.nextElementSibling;
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = '#48bb78';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
