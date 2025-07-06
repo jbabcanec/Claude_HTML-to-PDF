@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080">
+    <title>Marketing Presentation Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 100px;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Hero slide */
+        .hero-slide {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            text-align: center;
+            align-items: center;
+        }
+
+        .hero-slide h1 {
+            font-size: 108px;
+            font-weight: 900;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-slide .tagline {
+            font-size: 42px;
+            font-weight: 300;
+            opacity: 0.95;
+        }
+
+        /* Features slide */
+        .features-slide {
+            background: #ffffff;
+        }
+
+        .features-slide h2 {
+            font-size: 72px;
+            color: #2c3e50;
+            margin-bottom: 80px;
+            text-align: center;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 60px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 72px;
+            margin-bottom: 30px;
+        }
+
+        .feature-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .feature-desc {
+            font-size: 24px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        /* CTA slide */
+        .cta-slide {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            text-align: center;
+            align-items: center;
+        }
+
+        .cta-slide h2 {
+            font-size: 84px;
+            font-weight: 800;
+            margin-bottom: 40px;
+        }
+
+        .cta-slide p {
+            font-size: 36px;
+            margin-bottom: 60px;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            background: white;
+            color: #6c5ce7;
+            font-size: 36px;
+            font-weight: 700;
+            padding: 30px 80px;
+            border-radius: 60px;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Navigation */
+        .nav-dots {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .dot.active {
+            background: white;
+            transform: scale(1.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Slide -->
+    <div class="slide hero-slide active">
+        <h1>[Product Name]</h1>
+        <p class="tagline">[Compelling Tagline Here]</p>
+    </div>
+
+    <!-- Features Slide -->
+    <div class="slide features-slide">
+        <h2>[Key Features]</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <div class="feature-title">[Feature 1]</div>
+                <div class="feature-desc">[Feature 1 description]</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <div class="feature-title">[Feature 2]</div>
+                <div class="feature-desc">[Feature 2 description]</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title">[Feature 3]</div>
+                <div class="feature-desc">[Feature 3 description]</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Slide -->
+    <div class="slide cta-slide">
+        <h2>[Call to Action]</h2>
+        <p>[Compelling reason to act now]</p>
+        <a href="#" class="cta-button">[Action Button]</a>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-dots">
+        <div class="dot active" onclick="showSlide(0)"></div>
+        <div class="dot" onclick="showSlide(1)"></div>
+        <div class="dot" onclick="showSlide(2)"></div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.dot');
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentSlide = index;
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') {
+                if (currentSlide < slides.length - 1) {
+                    showSlide(currentSlide + 1);
+                }
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 0) {
+                    showSlide(currentSlide - 1);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
