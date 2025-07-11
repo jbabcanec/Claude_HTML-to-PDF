@@ -19,8 +19,9 @@
 
 - **🎯 Perfect Formatting**: Preserves all CSS styles, gradients, and animations
 - **🤖 AI-Optimized**: Designed specifically for Claude-generated presentations  
-- **📱 Multi-Format**: Supports horizontal (16:9) and vertical (9:16) layouts
+- **📱 Multi-Format**: Supports horizontal (16:9), vertical (9:16), and classic 4:3 layouts
 - **⚡ Auto-Detection**: Intelligently detects slide structure and navigation
+- **🔍 Improved Preview**: Auto-sized slide preview with zoom controls
 - **🌐 Web Interface**: Beautiful drag-and-drop interface hosted on GitHub Pages
 - **⚙️ CLI Tool**: Command-line interface for automated workflows
 - **🎨 Professional Templates**: 10+ ready-to-use templates for various use cases
@@ -96,7 +97,7 @@ npm run start [input] [output] [options]
 ### Options
 | Option | Description | Default |
 |--------|-------------|---------|
-| `--format` | `auto` \| `horizontal` \| `vertical` | `auto` |
+| `--format` | `auto` \| `horizontal` \| `vertical` \| `classic` \| `portrait` | `auto` |
 | `--width` | PDF width in pixels | 1920 (horizontal) |
 | `--height` | PDF height in pixels | 1080 (horizontal) |
 | `--wait` | Wait time between slides (ms) | 1500 |
