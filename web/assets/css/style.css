@@ -733,3 +733,562 @@ footer {
         padding: 14px 24px;
     }
 }
+
+/* Enhanced Preview Container Styles */
+.preview-container {
+    background: #f5f5f5;
+    border-radius: var(--radius-md);
+    padding: 20px;
+    height: 600px;
+    overflow: auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preview-content {
+    position: relative;
+    display: inline-block;
+    transition: all 0.3s ease;
+    transform-origin: center center;
+}
+
+#previewFrame {
+    border: none;
+    box-shadow: var(--shadow-md);
+    background: white;
+    border-radius: var(--radius-sm);
+    display: block;
+    transition: transform 0.3s ease;
+    transform-origin: center center;
+}
+
+/* Ensure preview frame maintains aspect ratio */
+.preview-content iframe {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Claude Prompts Section */
+.claude-prompts {
+    padding: 80px 0;
+    background: var(--card-background);
+}
+
+.claude-prompts h2 {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.claude-prompts > p {
+    text-align: center;
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+}
+
+.prompts-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.prompt-categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-bottom: 48px;
+}
+
+.prompt-category {
+    background: var(--background);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.prompt-category h3 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.prompt-box {
+    background: #f8f9fa;
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    border: 1px solid #e9ecef;
+}
+
+.prompt-box h4 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.prompt-content p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    color: var(--text-secondary);
+}
+
+.prompt-content ul {
+    margin: 12px 0 12px 20px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.prompt-content li {
+    margin-bottom: 4px;
+}
+
+.copy-prompt {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    margin-top: 16px;
+}
+
+.copy-prompt:hover {
+    background: #5a4a3e;
+    transform: translateY(-1px);
+}
+
+.copy-prompt.copied {
+    background: #28a745;
+}
+
+.prompts-cta {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    color: white;
+    padding: 40px;
+    border-radius: var(--radius-md);
+    text-align: center;
+    box-shadow: var(--shadow-md);
+}
+
+.prompts-cta h3 {
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+.prompts-cta p {
+    font-size: 16px;
+    margin-bottom: 24px;
+    opacity: 0.9;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.cta-buttons .btn-primary,
+.cta-buttons .btn-secondary {
+    padding: 12px 24px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.cta-buttons .btn-primary {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.cta-buttons .btn-primary:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.cta-buttons .btn-secondary {
+    background: white;
+    color: var(--primary-color);
+}
+
+.cta-buttons .btn-secondary:hover {
+    background: #f8f9fa;
+    transform: translateY(-2px);
+}
+
+/* Responsive Design for Prompts Section */
+@media (max-width: 768px) {
+    .prompt-categories {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    
+    .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .cta-buttons .btn-primary,
+    .cta-buttons .btn-secondary {
+        width: 200px;
+    }
+}
+
+/* Claude Prompts Preview Section */
+.claude-prompts-preview {
+    padding: 80px 0;
+    background: var(--card-background);
+    text-align: center;
+}
+
+.claude-prompts-preview h2 {
+    font-size: 36px;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+}
+
+.claude-prompts-preview > p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    margin-bottom: 48px;
+}
+
+.prompts-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    max-width: 1000px;
+    margin: 0 auto 40px auto;
+}
+
+.preview-card {
+    background: var(--background);
+    padding: 24px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.preview-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+}
+
+.preview-card h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+}
+
+.preview-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.prompts-cta-main {
+    margin-top: 32px;
+}
+
+.btn-primary-large {
+    background: var(--primary-color);
+    color: white;
+    padding: 16px 32px;
+    border-radius: var(--radius-sm);
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary-large:hover {
+    background: #5a4a3e;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* CLI Tools Section */
+.cli-tools {
+    padding: 80px 0;
+    background: var(--background);
+}
+
+.cli-tools h2 {
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.cli-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+}
+
+/* Terminal Demo */
+.cli-demo {
+    background: #1a1a1a;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+.terminal-header {
+    background: #333;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #444;
+}
+
+.terminal-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.terminal-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.terminal-btn.close { background: #ff5f56; }
+.terminal-btn.minimize { background: #ffbd2e; }
+.terminal-btn.maximize { background: #27ca3f; }
+
+.terminal-title {
+    color: #ccc;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.terminal-body {
+    padding: 20px;
+    background: #1a1a1a;
+    color: #f8f8f2;
+    min-height: 300px;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.terminal-line {
+    margin-bottom: 8px;
+}
+
+.prompt {
+    color: #50fa7b;
+    font-weight: bold;
+}
+
+.command {
+    color: #f8f8f2;
+}
+
+.terminal-line.output {
+    margin-left: 16px;
+    margin-bottom: 12px;
+}
+
+.success {
+    color: #50fa7b;
+}
+
+.info {
+    color: #8be9fd;
+}
+
+.cursor {
+    color: #f8f8f2;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* CLI Features */
+.cli-features {
+    background: var(--card-background);
+    padding: 32px;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.cli-features h3 {
+    font-size: 24px;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+}
+
+.cli-features ul {
+    list-style: none;
+    margin-bottom: 32px;
+}
+
+.cli-features li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-secondary);
+}
+
+.cli-features li:last-child {
+    border-bottom: none;
+}
+
+.cli-features strong {
+    color: var(--primary-color);
+}
+
+.cli-buttons {
+    display: flex;
+    gap: 16px;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 12px 24px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #5a4a3e;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: #dad5cd;
+    transform: translateY(-2px);
+}
+
+/* Responsive Design for CLI Section */
+@media (max-width: 768px) {
+    .cli-container {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+    
+    .terminal-body {
+        font-size: 12px;
+        padding: 16px;
+    }
+    
+    .cli-buttons {
+        flex-direction: column;
+    }
+}
+
+/* CLI Integration in Conversion Options */
+.cli-toggle {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.cli-toggle label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.cli-toggle input[type="checkbox"] {
+    accent-color: var(--primary-color);
+}
+
+.cli-commands {
+    margin-top: 16px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+}
+
+.cli-commands h4 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.cli-command {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.cli-command code {
+    flex: 1;
+    background: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 12px;
+    border: 1px solid #e0e0e0;
+}
+
+.cli-command button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.2s;
+}
+
+.cli-command button:hover {
+    background: #5a4a3e;
+}
+
+.cli-note {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 8px;
+    margin-bottom: 0;
+    font-style: italic;
+}

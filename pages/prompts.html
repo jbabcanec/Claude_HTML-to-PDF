@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude AI Prompts - HTML to PDF Converter</title>
+    <link rel="stylesheet" href="../web/assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="#E8E3DD"/>
+                    <path d="M20 10L28 15V25L20 30L12 25V15L20 10Z" stroke="#6B5B4F" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M20 10V20M20 20L12 15M20 20L28 15" stroke="#6B5B4F" stroke-width="2" stroke-linejoin="round"/>
+                </svg>
+                <h1>Claude HTML to PDF</h1>
+            </div>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../index.html#features">Features</a>
+                <a href="../index.html#cli-tools">CLI Tools</a>
+                <a href="templates.html">Templates & Examples</a>
+                <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF" target="_blank">GitHub</a>
+            </nav>
+        </header>
+
+        <section class="examples-hero">
+            <h1>Claude AI Prompts</h1>
+            <p>Professional prompts to create perfect HTML presentations that convert beautifully to PDF</p>
+        </section>
+
+        <section class="container">
+            <a href="../index.html" class="back-link">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 16L0 8L8 0L9.4 1.4L3.8 7H16V9H3.8L9.4 14.6L8 16Z"/>
+                </svg>
+                Back to Converter
+            </a>
+
+            <div class="claude-prompts-section">
+                <div class="prompt-categories">
+                    <div class="prompt-category">
+                        <h3>🏢 Business Presentations</h3>
+                        <div class="prompt-box">
+                            <h4>Quarterly Business Review</h4>
+                            <div class="prompt-content">
+                                <p>Create a professional business presentation about [TOPIC] as a single HTML file optimized for PDF conversion. Structure it with:</p>
+                                <ul>
+                                    <li>Each slide as &lt;div class="slide"&gt;</li>
+                                    <li>Title slide + 4-5 content slides</li>
+                                    <li>Embedded CSS and fonts</li>
+                                    <li>No external dependencies</li>
+                                </ul>
+                                <p><strong>PDF-Optimized Requirements:</strong> Exactly 1920x1080px slides, .slide classes, embedded CSS in &lt;style&gt; tags, system fonts only, minimum 36px text, no animations.</p>
+                            </div>
+                            <button class="copy-prompt" onclick="copyPrompt(this)" data-prompt="Create a professional business presentation about [TOPIC] as a single HTML file optimized for Claude HTML-to-PDF converter. Use this exact structure:
+
+HTML Structure:
+- Each slide as <div class='slide slide-1'>, <div class='slide slide-2'>, etc.
+- Body with margin:0, padding:0, overflow:hidden
+- Each slide exactly 1920x1080px dimensions
+
+Requirements for PDF optimization:
+- ALL CSS embedded in <style> tags (no external stylesheets)
+- Use system fonts only: font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif
+- NO external dependencies or CDN links
+- NO animations or transitions
+- Text minimum 36px for readability
+- High contrast colors
+- Gradient backgrounds are fine
+
+Content Structure:
+- Slide 1: Title slide with company name and presentation topic
+- Slide 2-4: Key content slides with large headers (72px) and bullet points
+- Slide 5: Data/metrics slide with large numbers and statistics
+- Slide 6: Call-to-action or summary slide
+
+Make each slide a full-screen layout that will convert perfectly to PDF pages.">📋 Copy Prompt</button>
+                        </div>
+                    </div>
+
+                    <div class="prompt-category">
+                        <h3>👨‍💻 Technical Documentation</h3>
+                        <div class="prompt-box">
+                            <h4>Technical Architecture</h4>
+                            <div class="prompt-content">
+                                <p>Create a developer-focused presentation about [TECHNOLOGY] with proper code formatting for PDF conversion:</p>
+                                <ul>
+                                    <li>Dark theme with syntax highlighting</li>
+                                    <li>Monospace fonts for code blocks</li>
+                                    <li>Architecture diagrams using CSS</li>
+                                    <li>Terminal-style examples</li>
+                                </ul>
+                                <p><strong>Code-Friendly Requirements:</strong> Use .slide structure, embedded fonts, CSS syntax highlighting, no external code libraries, readable code formatting.</p>
+                            </div>
+                            <button class="copy-prompt" onclick="copyPrompt(this)" data-prompt="Create a technical presentation about [TECHNOLOGY/TOPIC] as a single HTML file optimized for Claude HTML-to-PDF converter.
+
+HTML Structure for PDF conversion:
+- Use <div class='slide slide-1'>, <div class='slide slide-2'>, etc.
+- Exactly 1920x1080px per slide
+- Dark theme: background: #0d1117 or similar
+- Body: margin:0, padding:0, overflow:hidden
+
+Technical Requirements:
+- ALL CSS embedded in <style> tags
+- Use monospace fonts for code: font-family: 'Monaco', 'Menlo', 'Courier New', monospace
+- Create syntax highlighting with CSS classes:
+  .keyword { color: #ff7b72; }
+  .string { color: #a5d6ff; }
+  .comment { color: #8b949e; }
+  .function { color: #d2a8ff; }
+- NO external dependencies
+- Text minimum 24px, code minimum 18px
+
+Content Structure:
+- Slide 1: Title with technology name and overview
+- Slide 2: Architecture diagram using CSS boxes/grids
+- Slide 3-4: Code examples with proper syntax highlighting
+- Slide 5: Implementation steps or API endpoints
+- Slide 6: Performance metrics or deployment info
+
+Format code blocks in <pre> tags with proper indentation and syntax highlighting classes.">📋 Copy Prompt</button>
+                        </div>
+                    </div>
+
+                    <div class="prompt-category">
+                        <h3>📱 Mobile App Showcase</h3>
+                        <div class="prompt-box">
+                            <h4>Vertical Mobile Presentation</h4>
+                            <div class="prompt-content">
+                                <p>Create a mobile app presentation about [APP_NAME] optimized for vertical PDF conversion:</p>
+                                <ul>
+                                    <li>Portrait 9:16 format (1080x1920px)</li>
+                                    <li>Mobile UI design patterns</li>
+                                    <li>App store style layouts</li>
+                                    <li>Touch-friendly visual elements</li>
+                                </ul>
+                                <p><strong>Mobile-Optimized:</strong> Use .slide classes, vertical layout, embedded CSS, mobile color schemes, large fonts for mobile readability.</p>
+                            </div>
+                            <button class="copy-prompt" onclick="copyPrompt(this)" data-prompt="Create a mobile app presentation about [APP_NAME] as a single HTML file optimized for Claude HTML-to-PDF converter in vertical format.
+
+HTML Structure for vertical PDF:
+- Use <div class='slide slide-1'>, <div class='slide slide-2'>, etc.
+- Exactly 1080x1920px per slide (vertical orientation)
+- Body: margin:0, padding:0, overflow:hidden
+
+Mobile App Requirements:
+- ALL CSS embedded in <style> tags
+- Use mobile-friendly fonts: font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif
+- NO external dependencies or app store badges
+- Bright, engaging gradient backgrounds
+- Text minimum 32px for mobile readability
+- Use mobile UI design patterns
+
+Content Structure:
+- Slide 1: App hero with large app name, tagline, and mock phone image
+- Slide 2: Key features (3-4 features with icons and descriptions)
+- Slide 3: User statistics and social proof
+- Slide 4: App interface screenshots or mockups
+- Slide 5: Download CTA with pricing and availability
+
+Design mobile app store style layouts with rounded corners, gradients, and modern mobile design elements. Create mockup phone frames using CSS borders and shadows.">📋 Copy Prompt</button>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-category">
+                        <h3>⚡ Converter-Optimized</h3>
+                        <div class="prompt-box">
+                            <h4>Perfect PDF Template</h4>
+                            <div class="prompt-content">
+                                <p>Create any presentation guaranteed to work perfectly with the Claude HTML-to-PDF converter:</p>
+                                <ul>
+                                    <li>Exact .slide class structure required</li>
+                                    <li>Embedded CSS and system fonts only</li>
+                                    <li>Precise dimensions for PDF output</li>
+                                    <li>No external dependencies</li>
+                                </ul>
+                                <p><strong>100% Compatible:</strong> Follow this template for guaranteed PDF conversion success with any topic.</p>
+                            </div>
+                            <button class="copy-prompt" onclick="copyPrompt(this)" data-prompt="Create a presentation about [YOUR_TOPIC] using this EXACT template structure for perfect Claude HTML-to-PDF conversion:
+
+```html
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>[YOUR_TITLE]</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 60px;
+            text-align: center;
+            color: white;
+        }
+        .slide-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .slide-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .slide-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        h1 { font-size: 4em; font-weight: 800; margin-bottom: 0.5em; }
+        h2 { font-size: 3em; font-weight: 700; margin-bottom: 0.5em; }
+        p { font-size: 1.3em; line-height: 1.6; max-width: 800px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <div class='slide slide-1'>
+        <h1>[YOUR_TITLE]</h1>
+        <p>[YOUR_SUBTITLE]</p>
+    </div>
+    
+    <div class='slide slide-2'>
+        <h2>[CONTENT_TITLE]</h2>
+        <p>[YOUR_CONTENT]</p>
+    </div>
+    
+    <div class='slide slide-3'>
+        <h2>[CLOSING_TITLE]</h2>
+        <p>[YOUR_CLOSING]</p>
+    </div>
+</body>
+</html>
+```
+
+Replace [YOUR_TOPIC], [YOUR_TITLE], etc. with your actual content. Add more slides by copying the pattern with .slide-4, .slide-5, etc. This structure is 100% guaranteed to work with the converter.">📋 Copy Prompt</button>
+                        </div>
+                    </div>
+
+                    <div class="prompt-category">
+                        <h3>🎨 Marketing & Creative</h3>
+                        <div class="prompt-box">
+                            <h4>Product Launch Presentation</h4>
+                            <div class="prompt-content">
+                                <p>Create a stunning product launch presentation with modern design elements:</p>
+                                <ul>
+                                    <li>Hero slide with product showcase</li>
+                                    <li>Problem/solution narrative</li>
+                                    <li>Feature highlights with visuals</li>
+                                    <li>Strong call-to-action</li>
+                                </ul>
+                                <p><strong>Creative Requirements:</strong> Vibrant colors, modern typography, visual hierarchy, marketing-focused content structure.</p>
+                            </div>
+                            <button class="copy-prompt" onclick="copyPrompt(this)" data-prompt="Create a product launch presentation about [PRODUCT_NAME] as a single HTML file optimized for Claude HTML-to-PDF converter.
+
+HTML Structure:
+- Use <div class='slide slide-1'>, <div class='slide slide-2'>, etc.
+- Exactly 1920x1080px per slide
+- Body: margin:0, padding:0, overflow:hidden
+
+Marketing Design Requirements:
+- ALL CSS embedded in <style> tags
+- Use modern fonts: font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif
+- Vibrant gradient backgrounds and colors
+- NO external dependencies
+- Text minimum 36px for presentations
+- Strong visual hierarchy
+
+Content Structure:
+- Slide 1: Hero slide with product name, compelling tagline, and value proposition
+- Slide 2: Problem slide - what problem does your product solve?
+- Slide 3: Solution overview - how your product solves it uniquely
+- Slide 4: Key features (3-4 main features with benefits)
+- Slide 5: Market opportunity or target audience
+- Slide 6: Pricing/availability and strong call-to-action
+
+Design with modern marketing aesthetics, bold typography, and engaging visual elements. Use CSS to create visual interest with gradients, shadows, and layout variety.">📋 Copy Prompt</button>
+                        </div>
+                    </div>
+
+                    <div class="prompt-category">
+                        <h3>📚 Educational Content</h3>
+                        <div class="prompt-box">
+                            <h4>Learning & Training Materials</h4>
+                            <div class="prompt-content">
+                                <p>Create educational presentations with clear learning objectives:</p>
+                                <ul>
+                                    <li>Learning objectives stated upfront</li>
+                                    <li>Information in digestible chunks</li>
+                                    <li>Visual examples and illustrations</li>
+                                    <li>Key takeaways and summaries</li>
+                                </ul>
+                                <p><strong>Educational Requirements:</strong> Clean design, academic styling, clear hierarchy, step-by-step progression, summary sections.</p>
+                            </div>
+                            <button class="copy-prompt" onclick="copyPrompt(this)" data-prompt="Create an educational presentation about [TOPIC] as a single HTML file optimized for Claude HTML-to-PDF converter.
+
+HTML Structure:
+- Use <div class='slide slide-1'>, <div class='slide slide-2'>, etc.
+- Exactly 1920x1080px per slide
+- Body: margin:0, padding:0, overflow:hidden
+
+Educational Design Requirements:
+- ALL CSS embedded in <style> tags
+- Use clean, readable fonts: font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif
+- Professional, academic color scheme (blues, whites, subtle accents)
+- NO external dependencies
+- Text minimum 32px for readability
+- Clear visual hierarchy
+
+Content Structure:
+- Slide 1: Title slide with course/topic name and learning objectives
+- Slide 2: Agenda or outline of what will be covered
+- Slide 3-5: Main content slides (break complex topics into digestible chunks)
+- Slide 6: Visual examples, diagrams, or case studies
+- Slide 7: Key takeaways and summary points
+- Slide 8: Next steps, additional resources, or Q&A
+
+Design with educational best practices: plenty of white space, consistent formatting, numbered lists, and clear section breaks. Use subtle backgrounds and professional styling appropriate for learning environments.">📋 Copy Prompt</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="prompts-cta">
+                    <h3>Complete Prompting Guide</h3>
+                    <p>Access advanced prompts, styling guidelines, troubleshooting tips, and template customization instructions for creating perfect presentations with Claude AI.</p>
+                    <div class="cta-buttons">
+                        <a href="../docs/PROMPTING_GUIDE.md" target="_blank" class="btn-primary">📖 View Full Guide</a>
+                        <a href="templates.html" class="btn-secondary">🎨 See Examples</a>
+                    </div>
+                </div>
+
+                <div class="usage-instructions">
+                    <h3>How to Use These Prompts</h3>
+                    <div class="instruction-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Copy the Prompt</h4>
+                                <p>Click "📋 Copy Prompt" on any template above</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Customize with Claude</h4>
+                                <p>Paste into Claude AI and replace [TOPIC] with your content</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Save HTML File</h4>
+                                <p>Save Claude's output as an .html file</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h4>Convert to PDF</h4>
+                                <p>Upload to our converter and download your professional PDF</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>About</h4>
+                    <p>Claude HTML to PDF is an open-source tool for converting AI-generated presentations into professional PDFs.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Links</h4>
+                    <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF">GitHub Repository</a>
+                    <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF/issues">Report Issues</a>
+                    <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF/blob/main/README.md">Documentation</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Claude AI</h4>
+                    <p>These prompts are optimized specifically for Claude AI and this converter system.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Joseph J Babcanec. MIT License.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JavaScript for copy functionality -->
+    <script src="../web/assets/js/main.js"></script>
+    <style>
+        .examples-hero {
+            background: linear-gradient(135deg, #6B5B4F 0%, #D4A574 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        .examples-hero h1 {
+            font-size: 3em;
+            margin-bottom: 0.5em;
+        }
+        .examples-hero p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .claude-prompts-section {
+            padding: 40px 0;
+        }
+        .usage-instructions {
+            background: var(--background);
+            padding: 40px;
+            border-radius: var(--radius-md);
+            margin-top: 48px;
+            border: 1px solid var(--border-color);
+        }
+        .usage-instructions h3 {
+            text-align: center;
+            margin-bottom: 32px;
+            color: var(--text-primary);
+        }
+        .instruction-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+        }
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        .step-number {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .step-content h4 {
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        .step-content p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        .back-link:hover {
+            color: #5a4a3e;
+            background-color: var(--secondary-color);
+        }
+    </style>
+</body>
+</html>

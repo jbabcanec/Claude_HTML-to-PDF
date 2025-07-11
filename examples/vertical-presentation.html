@@ -2,265 +2,271 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1080, height=1920">
-    <title>Mobile-First Product Launch</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertical Mobile Presentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            width: 1080px;
-            height: 1920px;
+            font-family: 'Poppins', sans-serif;
             overflow: hidden;
-            position: relative;
         }
-
+        
         .slide {
-            width: 100%;
-            height: 100%;
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            padding: 80px;
+            width: 100vw;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
+            padding: 40px 30px;
             text-align: center;
-        }
-
-        .slide.active {
-            display: flex;
-        }
-
-        /* Slide 1 - Title */
-        .slide1 {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
-
-        .slide1 h1 {
-            font-size: 120px;
+        
+        .slide-1 {
+            background: linear-gradient(180deg, #ff6b6b 0%, #feca57 100%);
+        }
+        
+        .slide-2 {
+            background: linear-gradient(180deg, #a8e6cf 0%, #7fcdcd 100%);
+        }
+        
+        .slide-3 {
+            background: linear-gradient(180deg, #fd79a8 0%, #fdcb6e 100%);
+        }
+        
+        .slide-4 {
+            background: linear-gradient(180deg, #6c5ce7 0%, #a29bfe 100%);
+        }
+        
+        .slide-5 {
+            background: linear-gradient(180deg, #00b894 0%, #00cec9 100%);
+        }
+        
+        h1 {
+            font-size: 3.5em;
             font-weight: 800;
-            margin-bottom: 40px;
+            margin-bottom: 0.5em;
             line-height: 1.1;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-
-        .slide1 p {
-            font-size: 48px;
-            opacity: 0.9;
-            font-weight: 300;
+        
+        h2 {
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 0.7em;
+            line-height: 1.2;
+            text-shadow: 0 2px 15px rgba(0,0,0,0.3);
         }
-
-        /* Slide 2 - Features */
-        .slide2 {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-        }
-
-        .slide2 h2 {
-            font-size: 80px;
-            margin-bottom: 60px;
-        }
-
-        .feature {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 30px;
-            padding: 40px;
-            margin: 20px 0;
-            width: 100%;
-            backdrop-filter: blur(10px);
-        }
-
-        .feature h3 {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-
-        .feature p {
-            font-size: 36px;
+        
+        h3 {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 1em;
             opacity: 0.9;
         }
-
-        /* Slide 3 - Stats */
-        .slide3 {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
+        
+        p {
+            font-size: 1.2em;
+            font-weight: 400;
+            line-height: 1.6;
+            max-width: 100%;
+            margin: 0 auto 2em auto;
+            opacity: 0.95;
         }
-
-        .slide3 h2 {
-            font-size: 80px;
-            margin-bottom: 80px;
+        
+        .subtitle {
+            font-size: 1.3em;
+            font-weight: 500;
+            opacity: 0.8;
+            margin-bottom: 2em;
         }
-
-        .stat-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 40px;
+        
+        .feature-list {
             width: 100%;
+            max-width: 350px;
+            margin: 2em auto;
         }
-
-        .stat {
+        
+        .feature-item {
             background: rgba(255, 255, 255, 0.15);
-            padding: 60px;
-            border-radius: 30px;
+            margin: 15px 0;
+            padding: 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-
-        .stat-number {
-            font-size: 120px;
-            font-weight: 800;
-            margin-bottom: 20px;
+        
+        .feature-item h4 {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 0.5em;
         }
-
-        .stat-label {
-            font-size: 40px;
+        
+        .feature-item p {
+            font-size: 1em;
+            margin: 0;
             opacity: 0.9;
         }
-
-        /* Slide 4 - CTA */
-        .slide4 {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            color: #333;
+        
+        .stats-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            max-width: 300px;
+            margin: 2em auto;
         }
-
-        .slide4 h2 {
-            font-size: 100px;
-            margin-bottom: 40px;
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 3em;
             font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.2em;
         }
-
-        .slide4 p {
-            font-size: 48px;
-            margin-bottom: 60px;
-            max-width: 800px;
+        
+        .stat-label {
+            font-size: 1.1em;
+            font-weight: 500;
+            opacity: 0.9;
         }
-
-        .cta-button {
-            background: #333;
+        
+        .mobile-button {
+            background: rgba(255, 255, 255, 0.2);
             color: white;
-            font-size: 48px;
-            padding: 40px 80px;
-            border-radius: 100px;
+            padding: 18px 35px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: 600;
             text-decoration: none;
             display: inline-block;
-            font-weight: 600;
+            margin-top: 2em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
-
-        /* Navigation */
-        .navigation {
-            position: fixed;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
+        
+        .mobile-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .emoji {
+            font-size: 4em;
+            margin-bottom: 0.5em;
+            display: block;
+        }
+        
+        .social-proof {
+            margin-top: 2em;
+            opacity: 0.8;
+        }
+        
+        .app-mockup {
+            width: 200px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            margin: 2em auto;
+            border: 3px solid rgba(255, 255, 255, 0.3);
             display: flex;
-            gap: 20px;
-            z-index: 1000;
-        }
-
-        .nav-dot {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .nav-dot.active {
-            background: white;
-            transform: scale(1.3);
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            backdrop-filter: blur(10px);
         }
     </style>
 </head>
 <body>
-    <!-- Slide 1: Title -->
-    <div class="slide slide1 active">
-        <h1>Launch Your App</h1>
-        <p>Mobile-First Design Excellence</p>
+    <!-- Slide 1: Hero -->
+    <div class="slide slide-1">
+        <span class="emoji">📱</span>
+        <h1>FitTracker</h1>
+        <p class="subtitle">Your Personal Fitness Companion</p>
+        <p>Transform your health journey with AI-powered workouts, nutrition tracking, and personalized coaching.</p>
+        <a href="#" class="mobile-button">Download Now</a>
     </div>
-
+    
     <!-- Slide 2: Features -->
-    <div class="slide slide2">
-        <h2>Key Features</h2>
-        <div class="feature">
-            <h3>Instant Loading</h3>
-            <p>Optimized for speed</p>
-        </div>
-        <div class="feature">
-            <h3>Offline First</h3>
-            <p>Works everywhere</p>
-        </div>
-        <div class="feature">
-            <h3>Smart Sync</h3>
-            <p>Always up to date</p>
+    <div class="slide slide-2">
+        <h2>Why Choose Us?</h2>
+        <div class="feature-list">
+            <div class="feature-item">
+                <h4>🏃‍♂️ Smart Workouts</h4>
+                <p>AI-generated routines adapted to your fitness level and goals</p>
+            </div>
+            <div class="feature-item">
+                <h4>🥗 Nutrition Guide</h4>
+                <p>Personalized meal plans and calorie tracking made simple</p>
+            </div>
+            <div class="feature-item">
+                <h4>📊 Progress Analytics</h4>
+                <p>Detailed insights and motivation to keep you on track</p>
+            </div>
         </div>
     </div>
-
-    <!-- Slide 3: Stats -->
-    <div class="slide slide3">
-        <h2>Impact Numbers</h2>
-        <div class="stat-grid">
-            <div class="stat">
-                <div class="stat-number">2M+</div>
+    
+    <!-- Slide 3: Social Proof -->
+    <div class="slide slide-3">
+        <h2>Join Millions</h2>
+        <div class="stats-vertical">
+            <div class="stat-item">
+                <div class="stat-number">2.5M+</div>
                 <div class="stat-label">Active Users</div>
             </div>
-            <div class="stat">
-                <div class="stat-number">4.8★</div>
+            <div class="stat-item">
+                <div class="stat-number">4.9★</div>
                 <div class="stat-label">App Store Rating</div>
             </div>
-            <div class="stat">
-                <div class="stat-number">50ms</div>
-                <div class="stat-label">Load Time</div>
+            <div class="stat-item">
+                <div class="stat-number">50M+</div>
+                <div class="stat-label">Workouts Completed</div>
             </div>
         </div>
+        <p class="social-proof">"Best fitness app I've ever used!" - Sarah K.</p>
     </div>
-
-    <!-- Slide 4: CTA -->
-    <div class="slide slide4">
-        <h2>Ready to Start?</h2>
-        <p>Join millions of users who love our mobile experience</p>
-        <a href="#" class="cta-button">Download Now</a>
+    
+    <!-- Slide 4: App Preview -->
+    <div class="slide slide-4">
+        <h2>Beautiful Interface</h2>
+        <div class="app-mockup">
+            <div style="text-align: center;">
+                <div style="font-size: 2em; margin-bottom: 20px;">📱</div>
+                <div style="font-size: 0.9em; opacity: 0.8;">Intuitive Design</div>
+                <div style="font-size: 0.9em; opacity: 0.8;">Easy Navigation</div>
+                <div style="font-size: 0.9em; opacity: 0.8;">Beautiful Animations</div>
+            </div>
+        </div>
+        <p>Designed for ease of use with stunning visuals and smooth interactions.</p>
     </div>
-
-    <!-- Navigation -->
-    <div class="navigation">
-        <div class="nav-dot active" onclick="showSlide(0)"></div>
-        <div class="nav-dot" onclick="showSlide(1)"></div>
-        <div class="nav-dot" onclick="showSlide(2)"></div>
-        <div class="nav-dot" onclick="showSlide(3)"></div>
+    
+    <!-- Slide 5: Call to Action -->
+    <div class="slide slide-5">
+        <span class="emoji">🚀</span>
+        <h2>Start Today</h2>
+        <p>Begin your fitness transformation with a 7-day free trial. No credit card required.</p>
+        <a href="#" class="mobile-button">Get Started Free</a>
+        <div style="margin-top: 2em; font-size: 0.9em; opacity: 0.8;">
+            <p>Available on iOS & Android</p>
+            <p>Cancel anytime • 30-day guarantee</p>
+        </div>
     </div>
-
-    <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const dots = document.querySelectorAll('.nav-dot');
-
-        function showSlide(index) {
-            slides.forEach(slide => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
-            
-            slides[index].classList.add('active');
-            dots[index].classList.add('active');
-            currentSlide = index;
-        }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-                if (currentSlide < slides.length - 1) {
-                    showSlide(currentSlide + 1);
-                }
-            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-                if (currentSlide > 0) {
-                    showSlide(currentSlide - 1);
-                }
-            }
-        });
-    </script>
 </body>
 </html>

@@ -2,355 +2,410 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1920, height=1080">
-    <title>API Architecture Deep Dive</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Documentation - API Architecture</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'SF Mono', Monaco, 'Inconsolata', 'Fira Code', monospace;
-            width: 1920px;
-            height: 1080px;
+            font-family: 'Inter', sans-serif;
             overflow: hidden;
-            position: relative;
-            background: #1a202c;
-            color: #e2e8f0;
+            background: #0d1117;
+            color: #e6edf3;
         }
-
+        
         .slide {
-            width: 100%;
-            height: 100%;
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            padding: 100px;
-        }
-
-        .slide.active {
+            width: 100vw;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-        }
-
-        /* Slide 1 - Title */
-        .slide1 {
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-            text-align: center;
             align-items: center;
+            position: relative;
+            padding: 60px;
+            text-align: center;
         }
-
-        .slide1 h1 {
-            font-size: 84px;
-            font-weight: 800;
-            margin-bottom: 30px;
-            background: linear-gradient(135deg, #48bb78, #38a169);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        
+        .slide-1 {
+            background: linear-gradient(135deg, #0d1117 0%, #21262d 100%);
         }
-
-        .slide1 p {
-            font-size: 32px;
-            opacity: 0.8;
-            font-weight: 300;
+        
+        .slide-2 {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         }
-
-        /* Slide 2 - Architecture */
-        .slide2 {
-            background: #2d3748;
+        
+        .slide-3 {
+            background: linear-gradient(135deg, #0f3460 0%, #16537e 100%);
         }
-
-        .slide2 h2 {
-            font-size: 64px;
-            color: #48bb78;
-            margin-bottom: 60px;
+        
+        .slide-4 {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
         }
-
-        .architecture-box {
-            background: #4a5568;
-            padding: 30px;
-            border-radius: 12px;
-            margin: 20px 0;
-            border-left: 4px solid #48bb78;
+        
+        .slide-5 {
+            background: linear-gradient(135deg, #2d1b69 0%, #11998e 100%);
         }
-
-        .architecture-title {
-            font-size: 28px;
-            color: #48bb78;
-            margin-bottom: 10px;
+        
+        h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 0.5em;
+            line-height: 1.1;
+            color: #58a6ff;
         }
-
-        .architecture-desc {
-            font-size: 20px;
-            opacity: 0.9;
+        
+        h2 {
+            font-size: 2.8em;
+            font-weight: 600;
+            margin-bottom: 0.7em;
+            line-height: 1.2;
+            color: #58a6ff;
+        }
+        
+        h3 {
+            font-size: 1.8em;
+            font-weight: 600;
+            margin-bottom: 1em;
+            color: #79c0ff;
+        }
+        
+        p {
+            font-size: 1.2em;
+            font-weight: 400;
             line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto 2em auto;
+            color: #c9d1d9;
         }
-
-        /* Slide 3 - Code */
-        .slide3 {
-            background: #1a202c;
+        
+        .subtitle {
+            font-size: 1.4em;
+            font-weight: 500;
+            color: #8b949e;
+            margin-bottom: 2em;
         }
-
-        .slide3 h2 {
-            font-size: 64px;
-            color: #63b3ed;
-            margin-bottom: 40px;
-        }
-
+        
         .code-block {
-            background: #2d3748;
-            padding: 40px;
+            background: #161b22;
+            border: 1px solid #30363d;
             border-radius: 12px;
-            font-size: 24px;
+            padding: 30px;
+            margin: 2em auto;
+            max-width: 800px;
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
             line-height: 1.6;
             overflow-x: auto;
-            border: 1px solid #4a5568;
         }
-
-        .code-comment {
-            color: #68d391;
+        
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #30363d;
         }
-
-        .code-keyword {
-            color: #fbb6ce;
+        
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
         }
-
-        .code-string {
-            color: #faf089;
+        
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27ca3f; }
+        
+        .code-title {
+            color: #8b949e;
+            font-size: 0.8em;
+            margin-left: auto;
         }
-
-        .code-function {
-            color: #63b3ed;
-        }
-
-        /* Slide 4 - Performance */
-        .slide4 {
-            background: #2d3748;
-        }
-
-        .slide4 h2 {
-            font-size: 64px;
-            color: #f6ad55;
-            margin-bottom: 60px;
-        }
-
-        .metric-grid {
+        
+        .keyword { color: #ff7b72; }
+        .string { color: #a5d6ff; }
+        .comment { color: #8b949e; }
+        .function { color: #d2a8ff; }
+        .variable { color: #79c0ff; }
+        .number { color: #79c0ff; }
+        
+        .architecture-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 40px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1000px;
+            margin: 2em auto;
         }
-
-        .metric-card {
-            background: #4a5568;
-            padding: 40px;
+        
+        .arch-component {
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid #30363d;
+            padding: 25px;
             border-radius: 12px;
             text-align: center;
-            border: 1px solid #68d391;
         }
-
-        .metric-number {
-            font-size: 72px;
-            font-weight: 800;
-            color: #68d391;
-            margin-bottom: 10px;
-        }
-
-        .metric-label {
-            font-size: 24px;
-            opacity: 0.9;
-        }
-
-        /* Slide 5 - Diagram */
-        .slide5 {
-            background: #1a202c;
-        }
-
-        .slide5 h2 {
-            font-size: 64px;
-            color: #ed8936;
-            margin-bottom: 60px;
-        }
-
-        .diagram {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            height: 600px;
-        }
-
-        .diagram-node {
-            width: 200px;
-            height: 120px;
-            background: #4a5568;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
+        
+        .arch-component h4 {
+            font-size: 1.3em;
             font-weight: 600;
-            border: 2px solid #ed8936;
+            margin-bottom: 0.5em;
+            color: #58a6ff;
         }
-
-        .diagram-arrow {
-            font-size: 36px;
-            color: #ed8936;
+        
+        .arch-component p {
+            font-size: 1em;
+            margin: 0;
+            color: #8b949e;
         }
-
-        /* Navigation */
-        .nav-dots {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
+        
+        .tech-stack {
             display: flex;
-            gap: 15px;
-            z-index: 1000;
+            justify-content: center;
+            gap: 30px;
+            margin: 2em auto;
+            flex-wrap: wrap;
         }
-
-        .dot {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            transition: all 0.3s;
+        
+        .tech-item {
+            background: rgba(22, 27, 34, 0.8);
+            border: 1px solid #30363d;
+            padding: 20px 30px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            color: #79c0ff;
         }
-
-        .dot.active {
-            background: #48bb78;
-            transform: scale(1.3);
+        
+        .api-endpoint {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px auto;
+            max-width: 700px;
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.8em;
+            margin-right: 10px;
+        }
+        
+        .get { background: #238636; color: white; }
+        .post { background: #1f6feb; color: white; }
+        .put { background: #fb8500; color: white; }
+        .delete { background: #da3633; color: white; }
+        
+        .endpoint-path {
+            color: #c9d1d9;
+            font-weight: 500;
+        }
+        
+        .endpoint-desc {
+            color: #8b949e;
+            font-size: 0.9em;
+            margin-top: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .terminal {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 2em auto;
+            max-width: 800px;
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+        }
+        
+        .terminal-line {
+            margin: 8px 0;
+        }
+        
+        .prompt {
+            color: #39d353;
+        }
+        
+        .command {
+            color: #c9d1d9;
+        }
+        
+        .output {
+            color: #8b949e;
+            margin-left: 16px;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #58a6ff;
         }
     </style>
 </head>
 <body>
     <!-- Slide 1: Title -->
-    <div class="slide slide1 active">
-        <h1>API Architecture</h1>
-        <p>Building Scalable Microservices with Node.js</p>
+    <div class="slide slide-1">
+        <div class="logo">DevCorp API</div>
+        <h1>Microservices Architecture</h1>
+        <p class="subtitle">Building Scalable REST APIs with Node.js</p>
+        <p>A comprehensive guide to designing and implementing high-performance microservices using modern development practices and containerization.</p>
     </div>
-
-    <!-- Slide 2: Architecture -->
-    <div class="slide slide2">
+    
+    <!-- Slide 2: Architecture Overview -->
+    <div class="slide slide-2">
         <h2>System Architecture</h2>
-        <div class="architecture-box">
-            <div class="architecture-title">API Gateway</div>
-            <div class="architecture-desc">Single entry point for all client requests with authentication, rate limiting, and routing</div>
-        </div>
-        <div class="architecture-box">
-            <div class="architecture-title">Microservices</div>
-            <div class="architecture-desc">Independent services for user management, payments, notifications, and analytics</div>
-        </div>
-        <div class="architecture-box">
-            <div class="architecture-title">Database Layer</div>
-            <div class="architecture-desc">PostgreSQL for transactional data, Redis for caching, Elasticsearch for search</div>
+        <div class="architecture-grid">
+            <div class="arch-component">
+                <h4>🌐 API Gateway</h4>
+                <p>Request routing, authentication, and rate limiting</p>
+            </div>
+            <div class="arch-component">
+                <h4>⚡ Microservices</h4>
+                <p>Independent, scalable business logic containers</p>
+            </div>
+            <div class="arch-component">
+                <h4>🗄️ Database Layer</h4>
+                <p>MongoDB, Redis, and PostgreSQL data persistence</p>
+            </div>
+            <div class="arch-component">
+                <h4>📨 Message Queue</h4>
+                <p>Async communication via RabbitMQ and Kafka</p>
+            </div>
+            <div class="arch-component">
+                <h4>🔍 Monitoring</h4>
+                <p>ELK stack for logging and Prometheus metrics</p>
+            </div>
+            <div class="arch-component">
+                <h4>🔒 Security</h4>
+                <p>JWT authentication and OAuth2 integration</p>
+            </div>
         </div>
     </div>
-
-    <!-- Slide 3: Code -->
-    <div class="slide slide3">
-        <h2>Implementation Example</h2>
+    
+    <!-- Slide 3: Code Example -->
+    <div class="slide slide-3">
+        <h2>Express.js Service Example</h2>
         <div class="code-block">
-<span class="code-comment">// Express.js API route with middleware</span>
-<span class="code-keyword">const</span> express = <span class="code-function">require</span>(<span class="code-string">'express'</span>);
-<span class="code-keyword">const</span> app = <span class="code-function">express</span>();
-
-<span class="code-comment">// Authentication middleware</span>
-<span class="code-keyword">const</span> <span class="code-function">authenticate</span> = <span class="code-keyword">async</span> (req, res, next) => {
-  <span class="code-keyword">try</span> {
-    <span class="code-keyword">const</span> token = req.headers.authorization;
-    <span class="code-keyword">const</span> user = <span class="code-keyword">await</span> <span class="code-function">verifyToken</span>(token);
-    req.user = user;
-    <span class="code-function">next</span>();
-  } <span class="code-keyword">catch</span> (error) {
-    res.status(401).json({ error: <span class="code-string">'Unauthorized'</span> });
-  }
-};
-
-<span class="code-comment">// Protected route</span>
-app.get(<span class="code-string">'/api/users'</span>, authenticate, <span class="code-keyword">async</span> (req, res) => {
-  <span class="code-keyword">const</span> users = <span class="code-keyword">await</span> <span class="code-function">getUsersFromDB</span>();
-  res.json(users);
-});
-        </div>
-    </div>
-
-    <!-- Slide 4: Performance -->
-    <div class="slide slide4">
-        <h2>Performance Metrics</h2>
-        <div class="metric-grid">
-            <div class="metric-card">
-                <div class="metric-number">99.9%</div>
-                <div class="metric-label">Uptime</div>
+            <div class="code-header">
+                <div class="code-dot dot-red"></div>
+                <div class="code-dot dot-yellow"></div>
+                <div class="code-dot dot-green"></div>
+                <div class="code-title">user-service/index.js</div>
             </div>
-            <div class="metric-card">
-                <div class="metric-number">50ms</div>
-                <div class="metric-label">Avg Response Time</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-number">10K</div>
-                <div class="metric-label">RPS Capacity</div>
-            </div>
-            <div class="metric-card">
-                <div class="metric-number">0.01%</div>
-                <div class="metric-label">Error Rate</div>
+            <div>
+<span class="keyword">const</span> <span class="variable">express</span> = <span class="function">require</span>(<span class="string">'express'</span>);<br>
+<span class="keyword">const</span> <span class="variable">mongoose</span> = <span class="function">require</span>(<span class="string">'mongoose'</span>);<br>
+<span class="keyword">const</span> <span class="variable">User</span> = <span class="function">require</span>(<span class="string">'./models/User'</span>);<br><br>
+
+<span class="keyword">const</span> <span class="variable">app</span> = <span class="function">express</span>();<br>
+<span class="variable">app</span>.<span class="function">use</span>(<span class="variable">express</span>.<span class="function">json</span>());<br><br>
+
+<span class="comment">// Create new user endpoint</span><br>
+<span class="variable">app</span>.<span class="function">post</span>(<span class="string">'/api/users'</span>, <span class="keyword">async</span> (<span class="variable">req</span>, <span class="variable">res</span>) => {<br>
+&nbsp;&nbsp;<span class="keyword">try</span> {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">const</span> <span class="variable">user</span> = <span class="keyword">new</span> <span class="function">User</span>(<span class="variable">req</span>.<span class="variable">body</span>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">await</span> <span class="variable">user</span>.<span class="function">save</span>();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">res</span>.<span class="function">status</span>(<span class="number">201</span>).<span class="function">json</span>(<span class="variable">user</span>);<br>
+&nbsp;&nbsp;} <span class="keyword">catch</span> (<span class="variable">error</span>) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="variable">res</span>.<span class="function">status</span>(<span class="number">400</span>).<span class="function">json</span>({ <span class="variable">error</span>: <span class="variable">error</span>.<span class="variable">message</span> });<br>
+&nbsp;&nbsp;}<br>
+});<br><br>
+
+<span class="variable">app</span>.<span class="function">listen</span>(<span class="number">3001</span>, () => <span class="function">console</span>.<span class="function">log</span>(<span class="string">'User service running'</span>));
             </div>
         </div>
     </div>
-
-    <!-- Slide 5: Data Flow -->
-    <div class="slide slide5">
-        <h2>Request Flow Diagram</h2>
-        <div class="diagram">
-            <div class="diagram-node">Client</div>
-            <div class="diagram-arrow">→</div>
-            <div class="diagram-node">API Gateway</div>
-            <div class="diagram-arrow">→</div>
-            <div class="diagram-node">Microservice</div>
-            <div class="diagram-arrow">→</div>
-            <div class="diagram-node">Database</div>
+    
+    <!-- Slide 4: API Endpoints -->
+    <div class="slide slide-4">
+        <h2>REST API Endpoints</h2>
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div class="api-endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-path">/api/users</span>
+                <div class="endpoint-desc">Retrieve all users with pagination</div>
+            </div>
+            <div class="api-endpoint">
+                <span class="method post">POST</span>
+                <span class="endpoint-path">/api/users</span>
+                <div class="endpoint-desc">Create a new user account</div>
+            </div>
+            <div class="api-endpoint">
+                <span class="method get">GET</span>
+                <span class="endpoint-path">/api/users/:id</span>
+                <div class="endpoint-desc">Get user details by ID</div>
+            </div>
+            <div class="api-endpoint">
+                <span class="method put">PUT</span>
+                <span class="endpoint-path">/api/users/:id</span>
+                <div class="endpoint-desc">Update user information</div>
+            </div>
+            <div class="api-endpoint">
+                <span class="method delete">DELETE</span>
+                <span class="endpoint-path">/api/users/:id</span>
+                <div class="endpoint-desc">Delete user account</div>
+            </div>
+        </div>
+        
+        <div class="tech-stack">
+            <div class="tech-item">Node.js</div>
+            <div class="tech-item">Express.js</div>
+            <div class="tech-item">MongoDB</div>
+            <div class="tech-item">Docker</div>
+            <div class="tech-item">Kubernetes</div>
         </div>
     </div>
-
-    <!-- Navigation -->
-    <div class="nav-dots">
-        <div class="dot active" onclick="showSlide(0)"></div>
-        <div class="dot" onclick="showSlide(1)"></div>
-        <div class="dot" onclick="showSlide(2)"></div>
-        <div class="dot" onclick="showSlide(3)"></div>
-        <div class="dot" onclick="showSlide(4)"></div>
+    
+    <!-- Slide 5: Deployment -->
+    <div class="slide slide-5">
+        <h2>Container Deployment</h2>
+        <div class="terminal">
+            <div class="terminal-line">
+                <span class="prompt">$</span> <span class="command">docker build -t user-service .</span>
+            </div>
+            <div class="terminal-line output">
+                Step 1/8 : FROM node:16-alpine<br>
+                Step 2/8 : WORKDIR /app<br>
+                Step 3/8 : COPY package*.json ./<br>
+                Successfully built 2a8f9c7e1b34
+            </div>
+            <div class="terminal-line">
+                <span class="prompt">$</span> <span class="command">kubectl apply -f deployment.yaml</span>
+            </div>
+            <div class="terminal-line output">
+                deployment.apps/user-service created<br>
+                service/user-service created
+            </div>
+            <div class="terminal-line">
+                <span class="prompt">$</span> <span class="command">kubectl get pods</span>
+            </div>
+            <div class="terminal-line output">
+                NAME                            READY   STATUS    RESTARTS<br>
+                user-service-7d4f8b9c6d-x7m2p   1/1     Running   0<br>
+                user-service-7d4f8b9c6d-z9k5n   1/1     Running   0
+            </div>
+        </div>
+        <p>Automated CI/CD pipeline with GitHub Actions, Docker, and Kubernetes orchestration for zero-downtime deployments.</p>
     </div>
-
-    <script>
-        let currentSlide = 0;
-        const slides = document.querySelectorAll('.slide');
-        const dots = document.querySelectorAll('.dot');
-
-        function showSlide(index) {
-            slides.forEach(slide => slide.classList.remove('active'));
-            dots.forEach(dot => dot.classList.remove('active'));
-            
-            slides[index].classList.add('active');
-            dots[index].classList.add('active');
-            currentSlide = index;
-        }
-
-        // Keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') {
-                if (currentSlide < slides.length - 1) {
-                    showSlide(currentSlide + 1);
-                }
-            } else if (e.key === 'ArrowLeft') {
-                if (currentSlide > 0) {
-                    showSlide(currentSlide - 1);
-                }
-            }
-        });
-    </script>
 </body>
 </html>

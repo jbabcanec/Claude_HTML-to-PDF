@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Presentation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; overflow: hidden; }
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 60px;
+            text-align: center;
+            color: white;
+        }
+        .slide-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .slide-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .slide-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        h1 { font-size: 4em; font-weight: 800; margin-bottom: 0.5em; }
+        h2 { font-size: 3em; font-weight: 700; margin-bottom: 0.5em; }
+        p { font-size: 1.3em; line-height: 1.6; max-width: 800px; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <div class="slide slide-1">
+        <h1>Test Presentation</h1>
+        <p>This is a simple test file to check the loading spinner</p>
+    </div>
+    
+    <div class="slide slide-2">
+        <h2>Second Slide</h2>
+        <p>Testing the conversion process with loading indicator</p>
+    </div>
+    
+    <div class="slide slide-3">
+        <h2>Final Slide</h2>
+        <p>This should trigger the wiggling line loading indicator</p>
+    </div>
+</body>
+</html>

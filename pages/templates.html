@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templates & Examples - Claude HTML to PDF</title>
+    <link rel="stylesheet" href="../web/assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .examples-hero {
+            background: linear-gradient(135deg, #6B5B4F 0%, #D4A574 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        .examples-hero h1 {
+            font-size: 3em;
+            margin-bottom: 0.5em;
+        }
+        .examples-hero p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            padding: 80px 0;
+        }
+        .template-card {
+            background: var(--card-background);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .template-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        .template-preview {
+            height: 200px;
+            background: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+        }
+        .template-preview iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transform: scale(0.3);
+            transform-origin: 0 0;
+            width: 333.33%;
+            height: 333.33%;
+        }
+        .template-info {
+            padding: 24px;
+        }
+        .template-info h3 {
+            margin: 0 0 12px 0;
+            font-size: 1.4em;
+            color: var(--text-primary);
+        }
+        .template-info p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .template-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #5a4a3e;
+        }
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+        .btn-secondary:hover {
+            background: #dad5cd;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        .back-link:hover {
+            color: #5a4a3e;
+            background-color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="#E8E3DD"/>
+                    <path d="M20 10L28 15V25L20 30L12 25V15L20 10Z" stroke="#6B5B4F" stroke-width="2" stroke-linejoin="round"/>
+                    <path d="M20 10V20M20 20L12 15M20 20L28 15" stroke="#6B5B4F" stroke-width="2" stroke-linejoin="round"/>
+                </svg>
+                <h1>Claude HTML to PDF</h1>
+            </div>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../index.html#features">Features</a>
+                <a href="prompts.html">Claude Prompts</a>
+                <a href="../index.html#cli-tools">CLI Tools</a>
+                <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF" target="_blank">GitHub</a>
+            </nav>
+        </header>
+
+        <section class="examples-hero">
+            <h1>Templates & Examples</h1>
+            <p>Ready-to-use presentation templates that showcase the power of Claude HTML to PDF conversion</p>
+        </section>
+
+        <section class="container">
+            <a href="../index.html" class="back-link">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M8 16L0 8L8 0L9.4 1.4L3.8 7H16V9H3.8L9.4 14.6L8 16Z"/>
+                </svg>
+                Back to Converter
+            </a>
+
+            <div class="template-grid">
+            <div class="template-card">
+                <div class="template-preview">
+                    <iframe src="../examples/business-presentation.html"></iframe>
+                </div>
+                <div class="template-info">
+                    <h3>Business Presentation</h3>
+                    <p>Professional 16:9 horizontal format with gradient backgrounds, perfect for corporate presentations and business meetings.</p>
+                    <div class="template-actions">
+                        <a href="../examples/business-presentation.html" download class="btn btn-primary">
+                            📥 Download HTML
+                        </a>
+                        <a href="../examples/business-presentation.html" target="_blank" class="btn btn-secondary">
+                            👁️ Preview
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="template-card">
+                <div class="template-preview">
+                    <iframe src="../examples/vertical-presentation.html"></iframe>
+                </div>
+                <div class="template-info">
+                    <h3>Mobile Presentation</h3>
+                    <p>Vertical 9:16 format optimized for mobile viewing and social media sharing. Perfect for Instagram stories and mobile-first content.</p>
+                    <div class="template-actions">
+                        <a href="../examples/vertical-presentation.html" download class="btn btn-primary">
+                            📥 Download HTML
+                        </a>
+                        <a href="../examples/vertical-presentation.html" target="_blank" class="btn btn-secondary">
+                            👁️ Preview
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="template-card">
+                <div class="template-preview">
+                    <iframe src="../examples/technical-presentation.html"></iframe>
+                </div>
+                <div class="template-info">
+                    <h3>Technical Documentation</h3>
+                    <p>Developer-focused template with code syntax highlighting, technical diagrams, and monospace fonts for documentation.</p>
+                    <div class="template-actions">
+                        <a href="../examples/technical-presentation.html" download class="btn btn-primary">
+                            📥 Download HTML
+                        </a>
+                        <a href="../examples/technical-presentation.html" target="_blank" class="btn btn-secondary">
+                            👁️ Preview
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="template-card">
+                <div class="template-preview">
+                    <iframe src="../examples/simple-test.html"></iframe>
+                </div>
+                <div class="template-info">
+                    <h3>Simple Test Template</h3>
+                    <p>Basic 3-slide template for testing the conversion process. Great starting point for your own presentations.</p>
+                    <div class="template-actions">
+                        <a href="../examples/simple-test.html" download class="btn btn-primary">
+                            📥 Download HTML
+                        </a>
+                        <a href="../examples/simple-test.html" target="_blank" class="btn btn-secondary">
+                            👁️ Preview
+                        </a>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>About</h4>
+                    <p>Claude HTML to PDF is an open-source tool for converting AI-generated presentations into professional PDFs.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Links</h4>
+                    <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF">GitHub Repository</a>
+                    <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF/issues">Report Issues</a>
+                    <a href="https://github.com/jbabcanec/Claude_HTML-to-PDF/blob/main/README.md">Documentation</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Usage</h4>
+                    <p>Download any template, modify it to your needs, then upload it to the converter to generate your PDF.</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Joseph J Babcanec. MIT License.</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
