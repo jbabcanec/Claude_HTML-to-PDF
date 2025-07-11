@@ -103,8 +103,8 @@ class HTMLToPDFConverter {
         // Show conversion options
         this.conversionOptions.style.display = 'block';
         
-        // Add direct download option
-        this.addDirectDownloadButton();
+        // Analyze slide structure for better detection
+        this.analyzeSlideStructure();
         
         // Read and preview file
         const reader = new FileReader();
@@ -210,20 +210,121 @@ class HTMLToPDFConverter {
         return Math.max(0, score); // Don't go below 0
     }
 
-    addDirectDownloadButton() {
-        // Check if button already exists
-        if (document.getElementById('directDownloadBtn')) return;
+    async analyzeSlideStructure() {
+        if (!this.currentFile) return;
         
-        const convertBtn = document.getElementById('convertBtn');
-        const directDownloadBtn = document.createElement('button');
-        directDownloadBtn.id = 'directDownloadBtn';
-        directDownloadBtn.className = 'convert-btn direct-download-btn';
-        directDownloadBtn.textContent = '🚀 Quick Download (Beta)';
-        directDownloadBtn.style.marginLeft = '10px';
-        directDownloadBtn.style.background = '#28a745';
-        directDownloadBtn.addEventListener('click', () => this.directDownload());
+        const htmlContent = await this.getFileContent(this.currentFile);
+        const slideInfo = this.detectSlideStructure(htmlContent);
         
-        convertBtn.parentNode.insertBefore(directDownloadBtn, convertBtn.nextSibling);
+        console.log('📊 Slide Analysis:', slideInfo);
+        
+        // Update UI with slide information
+        this.displaySlideInfo(slideInfo);
+    }
+
+    detectSlideStructure(htmlContent) {
+        const info = {
+            type: 'unknown',
+            slideCount: 1,
+            method: 'none',
+            isHorizontalScroll: false,
+            suggestions: []
+        };
+        
+        // Check for horizontal scrolling presentations
+        if (this.isHorizontalScrollPresentation(htmlContent)) {
+            info.type = 'horizontal-scroll';
+            info.isHorizontalScroll = true;
+            info.slideCount = this.estimateScrollSlides(htmlContent);
+            info.method = 'horizontal-scroll';
+            info.suggestions.push('Detected horizontal scroll presentation');
+        }
+        
+        // Check for slide-based presentations
+        const slideSelectors = [
+            '.slide', '[data-slide]', '.swiper-slide', '.reveal .slides section',
+            '.step', '.page', 'section', '.slide-container'
+        ];
+        
+        for (const selector of slideSelectors) {
+            const regex = new RegExp(`<[^>]*class="[^"]*${selector.replace('.', '')}[^"]*"`, 'gi');
+            const matches = htmlContent.match(regex);
+            if (matches && matches.length > 1) {
+                info.type = 'slide-based';
+                info.slideCount = matches.length;
+                info.method = selector;
+                info.suggestions.push(`Found ${matches.length} slides using ${selector}`);
+                break;
+            }
+        }
+        
+        // Check for indicator-based navigation
+        const indicatorRegex = /<[^>]*class="[^"]*(?:indicator|dot|bullet|nav)[^"]*"/gi;
+        const indicatorMatches = htmlContent.match(indicatorRegex);
+        if (indicatorMatches && indicatorMatches.length > 1) {
+            info.slideCount = Math.max(info.slideCount, indicatorMatches.length);
+            info.suggestions.push(`Found ${indicatorMatches.length} navigation indicators`);
+        }
+        
+        return info;
+    }
+
+    isHorizontalScrollPresentation(htmlContent) {
+        const horizontalIndicators = [
+            /overflow-x:\s*scroll/gi,
+            /overflow-x:\s*auto/gi,
+            /scroll-snap-type:\s*x/gi,
+            /display:\s*flex[^;]*flex-direction:\s*row/gi,
+            /white-space:\s*nowrap/gi,
+            /transform:\s*translateX/gi
+        ];
+        
+        return horizontalIndicators.some(pattern => pattern.test(htmlContent));
+    }
+
+    estimateScrollSlides(htmlContent) {
+        // Look for elements that might be slides in a horizontal scroll
+        const possibleSlides = [
+            /<div[^>]*style="[^"]*(?:width|min-width)[^"]*"/gi,
+            /<section[^>]*>/gi,
+            /<article[^>]*>/gi
+        ];
+        
+        let maxCount = 1;
+        possibleSlides.forEach(pattern => {
+            const matches = htmlContent.match(pattern);
+            if (matches) {
+                maxCount = Math.max(maxCount, matches.length);
+            }
+        });
+        
+        return Math.min(maxCount, 10); // Cap at 10 slides
+    }
+
+    displaySlideInfo(slideInfo) {
+        const conversionOptions = document.getElementById('conversionOptions');
+        let infoElement = document.getElementById('slideInfo');
+        
+        if (!infoElement) {
+            infoElement = document.createElement('div');
+            infoElement.id = 'slideInfo';
+            infoElement.style.cssText = `
+                background: #e8f4f8;
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                font-size: 14px;
+                border-left: 4px solid #17a2b8;
+            `;
+            conversionOptions.insertBefore(infoElement, conversionOptions.firstChild);
+        }
+        
+        infoElement.innerHTML = `
+            <strong>📊 Slide Analysis:</strong><br>
+            Type: ${slideInfo.type}<br>
+            Estimated slides: ${slideInfo.slideCount}<br>
+            ${slideInfo.suggestions.join('<br>')}
+        `;
     }
 
     async directDownload() {
@@ -232,9 +333,9 @@ class HTMLToPDFConverter {
             return;
         }
 
-        const directDownloadBtn = document.getElementById('directDownloadBtn');
-        directDownloadBtn.textContent = '⏳ Generating PDF...';
-        directDownloadBtn.disabled = true;
+        const convertBtn = document.getElementById('convertBtn');
+        convertBtn.textContent = '⏳ Generating PDF...';
+        convertBtn.disabled = true;
 
         try {
             // Get the HTML content
@@ -258,8 +359,8 @@ class HTMLToPDFConverter {
             // Always provide fallback
             this.showDownloadInstructions(this.getConversionOptions());
         } finally {
-            directDownloadBtn.textContent = '🚀 Quick Download (Beta)';
-            directDownloadBtn.disabled = false;
+            convertBtn.textContent = '📄 Download PDF';
+            convertBtn.disabled = false;
         }
     }
     
@@ -390,31 +491,8 @@ class HTMLToPDFConverter {
     }
 
     async convertToPDF() {
-        if (!this.currentFile) {
-            this.showError('No file selected');
-            return;
-        }
-
-        // Get conversion options
-        const options = this.getConversionOptions();
-
-        // Show loading state
-        this.convertBtn.textContent = 'Converting...';
-        this.convertBtn.disabled = true;
-
-        try {
-            // Always provide download instructions with enhanced options
-            await this.simulateConversion();
-            
-            // Show enhanced download instructions
-            this.showDownloadInstructions(options);
-            
-        } catch (error) {
-            this.showError('Conversion failed: ' + error.message);
-        } finally {
-            this.convertBtn.textContent = 'Convert to PDF';
-            this.convertBtn.disabled = false;
-        }
+        // Use the direct download approach
+        await this.directDownload();
     }
 
     async simulateConversion() {
