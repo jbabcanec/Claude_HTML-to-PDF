@@ -15,8 +15,6 @@ class HTMLToPDFConverter {
     init() {
         // File upload handlers - simpler, more reliable approach
         this.uploadArea.addEventListener('click', (e) => {
-            console.log('Upload area clicked');
-            // Don't prevent default - this might be interfering with file input
             this.triggerFileInput();
         });
         
@@ -34,7 +32,6 @@ class HTMLToPDFConverter {
         this.uploadArea.setAttribute('aria-label', 'Click to upload HTML file');
         
         this.fileInput.addEventListener('change', (e) => {
-            console.log('File input changed:', e.target.files);
             this.handleFileSelect(e);
         });
         
@@ -60,13 +57,7 @@ class HTMLToPDFConverter {
 
     triggerFileInput() {
         // Direct approach - most reliable for user-initiated events
-        console.log('Triggering file input click');
-        try {
-            this.fileInput.click();
-            console.log('File input click successful');
-        } catch (error) {
-            console.error('File input click failed:', error);
-        }
+        this.fileInput.click();
     }
 
     handleDragOver(e) {
@@ -107,11 +98,13 @@ class HTMLToPDFConverter {
     }
 
     async processFile(file) {
-        console.log('Processing file:', file.name);
         this.currentFile = file;
         
         // Show conversion options
         this.conversionOptions.style.display = 'block';
+        
+        // Add direct download option
+        this.addDirectDownloadButton();
         
         // Read and preview file
         const reader = new FileReader();
@@ -142,16 +135,170 @@ class HTMLToPDFConverter {
     }
 
     detectPresentationFormat(htmlContent) {
-        // Simple detection logic
+        // Enhanced detection logic with 8.5x11 portrait detection
         const formatSelect = document.getElementById('format');
         
+        // Check for explicit format indicators first
         if (htmlContent.includes('width=1920') || htmlContent.includes('16:9')) {
             formatSelect.value = 'horizontal';
         } else if (htmlContent.includes('width=1080') || htmlContent.includes('9:16')) {
             formatSelect.value = 'vertical';
         } else {
-            formatSelect.value = 'auto';
+            // Check for portrait suitability
+            const portraitScore = this.calculatePortraitScore(htmlContent);
+            if (portraitScore >= 3) {
+                formatSelect.value = 'portrait';
+                console.log('✨ Auto-detected portrait format! Score:', portraitScore);
+            } else {
+                formatSelect.value = 'auto';
+            }
         }
+    }
+
+    calculatePortraitScore(htmlContent) {
+        let score = 0;
+        
+        // Remove HTML tags to get plain text
+        const textContent = htmlContent.replace(/<[^>]*>/g, '').trim();
+        
+        // Score based on text density (more text = more suitable for portrait)
+        if (textContent.length > 2000) score += 2;
+        else if (textContent.length > 1000) score += 1;
+        
+        // Score based on list content (lists work better in portrait)
+        const listMatches = htmlContent.match(/<[uo]l|<li|<dt|<dd/gi);
+        if (listMatches) {
+            if (listMatches.length > 15) score += 2;
+            else if (listMatches.length > 8) score += 1;
+        }
+        
+        // Score based on paragraphs (more paragraphs = better for portrait)
+        const paragraphMatches = htmlContent.match(/<p[^>]*>/gi);
+        if (paragraphMatches) {
+            if (paragraphMatches.length > 8) score += 2;
+            else if (paragraphMatches.length > 4) score += 1;
+        }
+        
+        // Score based on document-style keywords
+        const documentKeywords = /\b(document|report|article|paper|memo|letter|notes|meeting|agenda|minutes|policy|manual|guide|instructions|procedure|specification|requirements|analysis|summary|overview|outline|checklist|todo|list|bullet|points)\b/gi;
+        const keywordMatches = htmlContent.match(documentKeywords);
+        if (keywordMatches) {
+            if (keywordMatches.length > 5) score += 2;
+            else if (keywordMatches.length > 2) score += 1;
+        }
+        
+        // Score based on heading structure (many headings = document-like)
+        const headingMatches = htmlContent.match(/<h[1-6][^>]*>/gi);
+        if (headingMatches) {
+            if (headingMatches.length > 6) score += 1;
+            else if (headingMatches.length > 3) score += 0.5;
+        }
+        
+        // Negative score for presentation indicators
+        const presentationKeywords = /\b(slide|presentation|deck|slideshow|reveal|swiper|carousel|gallery|showcase)\b/gi;
+        const presentationMatches = htmlContent.match(presentationKeywords);
+        if (presentationMatches && presentationMatches.length > 2) {
+            score -= 1;
+        }
+        
+        // Negative score for media-heavy content
+        const mediaMatches = htmlContent.match(/<img|<video|<canvas|<svg/gi);
+        if (mediaMatches && mediaMatches.length > 5) {
+            score -= 1;
+        }
+        
+        return Math.max(0, score); // Don't go below 0
+    }
+
+    addDirectDownloadButton() {
+        // Check if button already exists
+        if (document.getElementById('directDownloadBtn')) return;
+        
+        const convertBtn = document.getElementById('convertBtn');
+        const directDownloadBtn = document.createElement('button');
+        directDownloadBtn.id = 'directDownloadBtn';
+        directDownloadBtn.className = 'convert-btn direct-download-btn';
+        directDownloadBtn.textContent = '🚀 Quick Download (Beta)';
+        directDownloadBtn.style.marginLeft = '10px';
+        directDownloadBtn.style.background = '#28a745';
+        directDownloadBtn.addEventListener('click', () => this.directDownload());
+        
+        convertBtn.parentNode.insertBefore(directDownloadBtn, convertBtn.nextSibling);
+    }
+
+    async directDownload() {
+        if (!this.currentFile) {
+            this.showError('No file selected');
+            return;
+        }
+
+        const directDownloadBtn = document.getElementById('directDownloadBtn');
+        directDownloadBtn.textContent = '⏳ Generating PDF...';
+        directDownloadBtn.disabled = true;
+
+        try {
+            // Get the HTML content
+            const htmlContent = await this.getFileContent(this.currentFile);
+            
+            // Create a temporary window for PDF generation
+            const tempWindow = window.open('', '_blank', 'width=1200,height=800');
+            if (!tempWindow) {
+                throw new Error('Popup blocked. Please allow popups for this site.');
+            }
+
+            // Write the HTML content to the temporary window
+            tempWindow.document.write(htmlContent);
+            tempWindow.document.close();
+
+            // Wait for content to load
+            await new Promise(resolve => {
+                tempWindow.addEventListener('load', resolve);
+                setTimeout(resolve, 2000); // Fallback timeout
+            });
+
+            // Trigger print dialog (user can save as PDF)
+            tempWindow.print();
+            
+            // Show success message
+            this.showSuccessMessage('PDF generation initiated! Use your browser\'s print dialog to save as PDF.');
+            
+        } catch (error) {
+            console.error('Direct download failed:', error);
+            this.showError('Direct download failed: ' + error.message);
+        } finally {
+            directDownloadBtn.textContent = '🚀 Quick Download (Beta)';
+            directDownloadBtn.disabled = false;
+        }
+    }
+
+    async getFileContent(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = (e) => reject(e);
+            reader.readAsText(file);
+        });
+    }
+
+    showSuccessMessage(message) {
+        const notification = document.createElement('div');
+        notification.className = 'success-notification';
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        `;
+        
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 5000);
     }
 
     async convertToPDF() {

@@ -232,6 +232,9 @@ nav a:hover {
     height: 500px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
+    transform: scale(0.5);
+    transform-origin: top left;
+    min-height: 800px;
 }
 
 /* Features Section */
