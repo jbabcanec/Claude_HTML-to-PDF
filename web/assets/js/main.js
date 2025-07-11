@@ -166,34 +166,30 @@ class HTMLToPDFConverter {
         const slideInfo = this.detectSlideStructure(htmlContent);
         
         if (slideInfo.isHorizontalScroll && slideInfo.slideCount > 1) {
-            // Extract and prepare slides
+            // Extract actual slides
             await this.prepareSlides(htmlContent, slideInfo);
             this.showSlideNavigation();
-            this.showCurrentSlide();
         } else {
             // Show single page
             this.slides = [{ content: htmlContent, title: 'Full Document' }];
             this.hideSlideNavigation();
-            this.showCurrentSlide();
         }
         
-        // Fit to window initially
-        setTimeout(() => this.fitToWindow(), 100);
+        // Show the actual HTML content
+        this.showCurrentSlide();
     }
     
     async prepareSlides(htmlContent, slideInfo) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, 'text/html');
         
-        // Extract base styles
-        const baseStyles = this.extractBaseStyles(doc);
-        
         // Find all slide elements
         const slideElements = doc.querySelectorAll('.slide');
         
         this.slides = [];
         slideElements.forEach((slide, index) => {
-            const slideHtml = this.createSlideHtml(slide, baseStyles, index);
+            // Create a clean copy of the original HTML with just this slide
+            const slideHtml = this.createCleanSlideHtml(htmlContent, slide, index);
             this.slides.push({
                 content: slideHtml,
                 title: `Slide ${index + 1}`
@@ -218,44 +214,28 @@ class HTMLToPDFConverter {
         return styles.join('\n');
     }
     
-    createSlideHtml(slide, baseStyles, index) {
-        return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slide ${index + 1}</title>
-    ${baseStyles}
-    <style>
-        body { 
-            margin: 0; 
-            padding: 0; 
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: #f0f0f0;
-        }
-        .slide {
-            width: 90vw;
-            height: 90vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-sizing: border-box;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-    </style>
-</head>
-<body>
-    ${slide.outerHTML}
-</body>
-</html>`;
+    createCleanSlideHtml(originalHtml, slideElement, index) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(originalHtml, 'text/html');
+        
+        // Hide all slides except the current one
+        const allSlides = doc.querySelectorAll('.slide');
+        allSlides.forEach((slide, i) => {
+            if (i !== index) {
+                slide.style.display = 'none';
+            }
+        });
+        
+        // Add a simple override to show only this slide
+        const style = doc.createElement('style');
+        style.textContent = `
+            .slide:nth-child(${index + 1}) {
+                display: flex !important;
+            }
+        `;
+        doc.head.appendChild(style);
+        
+        return doc.documentElement.outerHTML;
     }
     
     showCurrentSlide() {
@@ -267,12 +247,14 @@ class HTMLToPDFConverter {
         const blob = new Blob([currentSlide.content], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         
-        // Update iframe
+        // Update iframe with proper settings
         this.previewFrame.src = url;
         
         // Clean up previous blob URL
         this.previewFrame.onload = () => {
             URL.revokeObjectURL(url);
+            // Apply current zoom after loading
+            this.applyZoom();
         };
         
         // Update slide counter
@@ -310,26 +292,23 @@ class HTMLToPDFConverter {
     }
     
     fitToWindow() {
-        // Calculate the best fit zoom level
-        const containerWidth = this.previewContainer.clientWidth - 40; // Account for padding
-        const containerHeight = this.previewContainer.clientHeight - 40;
-        const frameWidth = this.previewFrame.offsetWidth;
-        const frameHeight = this.previewFrame.offsetHeight;
-        
-        const scaleX = containerWidth / frameWidth;
-        const scaleY = containerHeight / frameHeight;
-        
-        this.currentZoom = Math.min(scaleX, scaleY, 1.0); // Don't zoom beyond 100%
+        // Reset to 100% zoom for fit to window
+        this.currentZoom = 1.0;
         this.applyZoom();
         this.updateZoomDisplay();
     }
     
     applyZoom() {
+        // Apply zoom to the iframe content
         this.previewFrame.style.transform = `scale(${this.currentZoom})`;
+        this.previewFrame.style.transformOrigin = 'top left';
         
-        // Adjust container height based on zoom
+        // Adjust the container to accommodate the scaled content
+        const scaledWidth = this.previewFrame.offsetWidth * this.currentZoom;
         const scaledHeight = this.previewFrame.offsetHeight * this.currentZoom;
-        this.previewContent.style.minHeight = `${scaledHeight + 40}px`;
+        
+        this.previewContent.style.minWidth = `${scaledWidth}px`;
+        this.previewContent.style.minHeight = `${scaledHeight}px`;
     }
     
     updateZoomDisplay() {
@@ -523,17 +502,16 @@ class HTMLToPDFConverter {
         convertBtn.disabled = true;
 
         try {
-            // Get the HTML content
-            const htmlContent = await this.getFileContent(this.currentFile);
-            
-            // Enhanced approach: Create a better formatted document
-            const enhancedHtml = this.enhanceHtmlForPdf(htmlContent);
-            
-            // Try to generate PDF - this will open print dialog
-            await this.tryMultiplePdfMethods(enhancedHtml);
-            
-            // Don't show success message since we can't detect actual PDF generation
-            // Just show instruction that print dialog should have opened
+            // If we have multiple slides, create a combined PDF document
+            if (this.slides.length > 1) {
+                const combinedHtml = this.createCombinedPdfDocument();
+                this.openPrintDialog(combinedHtml);
+            } else {
+                // Single page - just print the current content
+                const htmlContent = await this.getFileContent(this.currentFile);
+                const enhancedHtml = this.enhanceHtmlForPdf(htmlContent);
+                this.openPrintDialog(enhancedHtml);
+            }
             
         } catch (error) {
             console.error('Direct download failed:', error);
@@ -541,6 +519,20 @@ class HTMLToPDFConverter {
         } finally {
             convertBtn.textContent = '📄 Download PDF';
             convertBtn.disabled = false;
+        }
+    }
+    
+    openPrintDialog(htmlContent) {
+        const printWindow = window.open('', '_blank', 'width=1200,height=800');
+        if (printWindow) {
+            printWindow.document.write(htmlContent);
+            printWindow.document.close();
+            
+            // Wait for content to load then open print dialog
+            setTimeout(() => {
+                printWindow.focus();
+                printWindow.print();
+            }, 1000);
         }
     }
     
@@ -663,75 +655,52 @@ class HTMLToPDFConverter {
     }
     
     createCombinedPdfDocument() {
-        // Extract slide content from each slide
-        const slideContents = this.slides.map((slide, index) => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(slide.content, 'text/html');
-            const slideElement = doc.querySelector('.slide');
-            return slideElement ? slideElement.outerHTML : '';
-        }).join('\n');
-        
-        // Get base styles from the first slide
+        // Take the original HTML from the first slide and extract all slides
         const parser = new DOMParser();
-        const firstSlideDoc = parser.parseFromString(this.slides[0].content, 'text/html');
-        const headContent = firstSlideDoc.querySelector('head').innerHTML;
+        const doc = parser.parseFromString(this.slides[0].content, 'text/html');
         
-        return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presentation - ${this.slides.length} Slides</title>
-    ${headContent}
-    <style>
-        @media print {
-            body { margin: 0; padding: 0; background: white; }
-            @page { 
-                size: ${this.getCurrentPageSize()}; 
-                margin: 0.5in; 
+        // Remove any hiding styles we added
+        const injectedStyles = doc.querySelectorAll('style');
+        injectedStyles.forEach(style => {
+            if (style.textContent.includes('nth-child')) {
+                style.remove();
             }
-            .slide { 
-                page-break-after: always; 
-                min-height: 100vh;
-                width: 100%;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                box-sizing: border-box;
-                background: white;
-            }
-            .slide:last-child { 
-                page-break-after: avoid; 
-            }
-        }
+        });
         
-        @media screen {
-            body { 
-                margin: 0; 
-                padding: 20px; 
-                background: #f0f0f0;
+        // Make all slides visible for printing
+        const allSlides = doc.querySelectorAll('.slide');
+        allSlides.forEach(slide => {
+            slide.style.display = '';
+        });
+        
+        // Add print-specific styles
+        const printStyle = doc.createElement('style');
+        printStyle.textContent = `
+            @media print {
+                body { 
+                    margin: 0; 
+                    padding: 0; 
+                    background: white; 
+                }
+                @page { 
+                    size: ${this.getCurrentPageSize()}; 
+                    margin: 0.5in; 
+                }
+                .slide { 
+                    page-break-after: always; 
+                    min-height: 100vh;
+                    width: 100%;
+                    box-sizing: border-box;
+                    overflow: hidden;
+                }
+                .slide:last-child { 
+                    page-break-after: avoid; 
+                }
             }
-            .slide {
-                width: 100%;
-                min-height: 100vh;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                box-sizing: border-box;
-                margin-bottom: 40px;
-                background: white;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            }
-        }
-    </style>
-</head>
-<body>
-    ${slideContents}
-</body>
-</html>`;
+        `;
+        doc.head.appendChild(printStyle);
+        
+        return `<!DOCTYPE html>${doc.documentElement.outerHTML}`;
     }
     
     getConversionOptions() {
