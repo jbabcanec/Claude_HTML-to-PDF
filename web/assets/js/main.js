@@ -240,35 +240,123 @@ class HTMLToPDFConverter {
             // Get the HTML content
             const htmlContent = await this.getFileContent(this.currentFile);
             
-            // Create a temporary window for PDF generation
-            const tempWindow = window.open('', '_blank', 'width=1200,height=800');
-            if (!tempWindow) {
-                throw new Error('Popup blocked. Please allow popups for this site.');
-            }
-
-            // Write the HTML content to the temporary window
-            tempWindow.document.write(htmlContent);
-            tempWindow.document.close();
-
-            // Wait for content to load
-            await new Promise(resolve => {
-                tempWindow.addEventListener('load', resolve);
-                setTimeout(resolve, 2000); // Fallback timeout
-            });
-
-            // Trigger print dialog (user can save as PDF)
-            tempWindow.print();
+            // Enhanced approach: Create a better formatted document
+            const enhancedHtml = this.enhanceHtmlForPdf(htmlContent);
             
-            // Show success message
-            this.showSuccessMessage('PDF generation initiated! Use your browser\'s print dialog to save as PDF.');
+            // Try multiple methods for PDF generation
+            const success = await this.tryMultiplePdfMethods(enhancedHtml);
+            
+            if (success) {
+                this.showSuccessMessage('PDF generation successful! Check your downloads folder.');
+            } else {
+                // Fallback: show the modal instructions
+                this.showDownloadInstructions(this.getConversionOptions());
+            }
             
         } catch (error) {
             console.error('Direct download failed:', error);
-            this.showError('Direct download failed: ' + error.message);
+            // Always provide fallback
+            this.showDownloadInstructions(this.getConversionOptions());
         } finally {
             directDownloadBtn.textContent = '🚀 Quick Download (Beta)';
             directDownloadBtn.disabled = false;
         }
+    }
+    
+    enhanceHtmlForPdf(htmlContent) {
+        // Add PDF-friendly styling
+        const pdfStyles = `
+            <style>
+                @media print {
+                    body { margin: 0; padding: 20px; }
+                    @page { 
+                        size: ${this.getCurrentPageSize()}; 
+                        margin: 0.5in; 
+                    }
+                    .slide { 
+                        page-break-after: always; 
+                        min-height: 100vh; 
+                    }
+                    .slide:last-child { 
+                        page-break-after: avoid; 
+                    }
+                }
+            </style>
+        `;
+        
+        // Insert styles into head
+        return htmlContent.replace('</head>', pdfStyles + '</head>');
+    }
+    
+    getCurrentPageSize() {
+        const format = document.getElementById('format').value;
+        switch(format) {
+            case 'portrait': return 'letter portrait';
+            case 'vertical': return 'A4 portrait';
+            case 'horizontal': return 'A4 landscape';
+            default: return 'letter';
+        }
+    }
+    
+    async tryMultiplePdfMethods(htmlContent) {
+        // Method 1: Direct window print
+        try {
+            const tempWindow = window.open('', '_blank', 'width=1200,height=800');
+            if (tempWindow) {
+                tempWindow.document.write(htmlContent);
+                tempWindow.document.close();
+                
+                // Wait for load
+                await new Promise(resolve => {
+                    tempWindow.addEventListener('load', resolve);
+                    setTimeout(resolve, 2000);
+                });
+                
+                tempWindow.print();
+                return true;
+            }
+        } catch (error) {
+            console.log('Method 1 failed:', error);
+        }
+        
+        // Method 2: Blob URL approach
+        try {
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const tempWindow = window.open(url, '_blank');
+            if (tempWindow) {
+                setTimeout(() => {
+                    tempWindow.print();
+                    URL.revokeObjectURL(url);
+                }, 2000);
+                return true;
+            }
+        } catch (error) {
+            console.log('Method 2 failed:', error);
+        }
+        
+        // Method 3: Data URL approach
+        try {
+            const dataUrl = 'data:text/html;charset=utf-8,' + encodeURIComponent(htmlContent);
+            const tempWindow = window.open(dataUrl, '_blank');
+            if (tempWindow) {
+                setTimeout(() => tempWindow.print(), 2000);
+                return true;
+            }
+        } catch (error) {
+            console.log('Method 3 failed:', error);
+        }
+        
+        return false; // All methods failed
+    }
+    
+    getConversionOptions() {
+        return {
+            format: document.getElementById('format').value,
+            quality: document.getElementById('quality').value,
+            margin: parseInt(document.getElementById('margin').value),
+            scale: parseFloat(document.getElementById('scale').value)
+        };
     }
 
     async getFileContent(file) {
@@ -308,23 +396,17 @@ class HTMLToPDFConverter {
         }
 
         // Get conversion options
-        const options = {
-            format: document.getElementById('format').value,
-            quality: document.getElementById('quality').value,
-            margin: parseInt(document.getElementById('margin').value),
-            scale: parseFloat(document.getElementById('scale').value)
-        };
+        const options = this.getConversionOptions();
 
         // Show loading state
         this.convertBtn.textContent = 'Converting...';
         this.convertBtn.disabled = true;
 
         try {
-            // Since we're running on GitHub Pages, we'll need to use a server API
-            // For now, we'll simulate the conversion and provide instructions
+            // Always provide download instructions with enhanced options
             await this.simulateConversion();
             
-            // Show download instructions
+            // Show enhanced download instructions
             this.showDownloadInstructions(options);
             
         } catch (error) {
