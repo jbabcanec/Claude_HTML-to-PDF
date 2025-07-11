@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Presentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            overflow: hidden;
+        }
+        
+        .slide {
+            display: none;
+            padding: 60px;
+            text-align: center;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .slide.active {
+            display: flex;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            max-width: 800px;
+        }
+        
+        .indicator-dots {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+        
+        .indicator-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .indicator-dot.active {
+            background: white;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="slide active">
+        <h1>Welcome to Test Presentation</h1>
+        <p>This is a sample HTML presentation to test the PDF conversion functionality.</p>
+    </div>
+    
+    <div class="slide">
+        <h2>Second Slide</h2>
+        <p>This slide demonstrates the multi-slide capability of the converter.</p>
+        <p>It should detect this as a horizontal presentation format.</p>
+    </div>
+    
+    <div class="slide">
+        <h2>Final Slide</h2>
+        <p>Thank you for testing the HTML to PDF converter!</p>
+        <p>This should work with the Claude HTML-to-PDF tool.</p>
+    </div>
+    
+    <div class="indicator-dots">
+        <div class="indicator-dot active" onclick="showSlide(0)"></div>
+        <div class="indicator-dot" onclick="showSlide(1)"></div>
+        <div class="indicator-dot" onclick="showSlide(2)"></div>
+    </div>
+    
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.indicator-dot');
+        
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            slides[index].classList.add('active');
+            dots[index].classList.add('active');
+            currentSlide = index;
+        }
+        
+        // Make showSlide global for the converter
+        window.showSlide = showSlide;
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentSlide < slides.length - 1) {
+                showSlide(currentSlide + 1);
+            } else if (e.key === 'ArrowLeft' && currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        });
+    </script>
+</body>
+</html>

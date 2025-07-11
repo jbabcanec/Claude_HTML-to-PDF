@@ -13,13 +13,10 @@ class HTMLToPDFConverter {
     }
 
     init() {
-        // File upload handlers - comprehensive browser compatibility approach
+        // File upload handlers - simpler, more reliable approach
         this.uploadArea.addEventListener('click', (e) => {
-            // Prevent any event bubbling
-            e.preventDefault();
-            e.stopPropagation();
-            
-            // Try multiple methods for browser compatibility
+            console.log('Upload area clicked');
+            // Don't prevent default - this might be interfering with file input
             this.triggerFileInput();
         });
         
@@ -36,7 +33,10 @@ class HTMLToPDFConverter {
         this.uploadArea.setAttribute('role', 'button');
         this.uploadArea.setAttribute('aria-label', 'Click to upload HTML file');
         
-        this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+        this.fileInput.addEventListener('change', (e) => {
+            console.log('File input changed:', e.target.files);
+            this.handleFileSelect(e);
+        });
         
         // Drag and drop handlers
         this.uploadArea.addEventListener('dragover', (e) => this.handleDragOver(e));
@@ -59,49 +59,13 @@ class HTMLToPDFConverter {
     }
 
     triggerFileInput() {
-        // Multiple methods to handle different browser restrictions
-        const methods = [
-            // Method 1: Direct click (works in most browsers)
-            () => this.fileInput.click(),
-            
-            // Method 2: Create and dispatch MouseEvent
-            () => {
-                const event = new MouseEvent('click', {
-                    view: window,
-                    bubbles: true,
-                    cancelable: true
-                });
-                this.fileInput.dispatchEvent(event);
-            },
-            
-            // Method 3: Use HTMLInputElement interface
-            () => {
-                if (this.fileInput.HTMLInputElement) {
-                    this.fileInput.HTMLInputElement.prototype.click.call(this.fileInput);
-                }
-            },
-            
-            // Method 4: Focus and trigger via keyboard
-            () => {
-                this.fileInput.focus();
-                const event = new KeyboardEvent('keydown', {
-                    key: 'Enter',
-                    keyCode: 13,
-                    bubbles: true
-                });
-                this.fileInput.dispatchEvent(event);
-            }
-        ];
-        
-        // Try each method until one works
-        for (const method of methods) {
-            try {
-                method();
-                break; // If successful, stop trying other methods
-            } catch (err) {
-                // Continue to next method
-                continue;
-            }
+        // Direct approach - most reliable for user-initiated events
+        console.log('Triggering file input click');
+        try {
+            this.fileInput.click();
+            console.log('File input click successful');
+        } catch (error) {
+            console.error('File input click failed:', error);
         }
     }
 
@@ -143,6 +107,7 @@ class HTMLToPDFConverter {
     }
 
     async processFile(file) {
+        console.log('Processing file:', file.name);
         this.currentFile = file;
         
         // Show conversion options
