@@ -302,6 +302,9 @@ nav a:hover {
     background: #f8f9fa;
     min-height: 600px;
     max-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .preview-content {
@@ -326,6 +329,8 @@ nav a:hover {
     transition: transform 0.3s ease;
     display: block;
     max-width: 100%;
+    min-height: 600px;
+    overflow: hidden;
 }
 
 /* Features Section */

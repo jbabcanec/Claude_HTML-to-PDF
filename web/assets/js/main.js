@@ -22,6 +22,7 @@ class HTMLToPDFConverter {
         this.currentZoom = 1.0;
         this.currentSlide = 0;
         this.slides = [];
+        this.currentSlideInfo = null;
         this.init();
     }
 
@@ -162,20 +163,24 @@ class HTMLToPDFConverter {
         this.slides = [];
         this.updateZoomDisplay();
         
-        // Analyze slide structure
-        const slideInfo = this.detectSlideStructure(htmlContent);
+        // Enhanced slide structure detection
+        const slideInfo = await this.detectSlideStructure(htmlContent);
+        console.log('🔍 Slide detection result:', slideInfo);
         
-        if (slideInfo.isHorizontalScroll && slideInfo.slideCount > 1) {
-            // Extract actual slides
+        // Store slide info for PDF generation
+        this.currentSlideInfo = slideInfo;
+        
+        if (slideInfo.slideCount > 1) {
+            // Extract and prepare slides with proper isolation
             await this.prepareSlides(htmlContent, slideInfo);
             this.showSlideNavigation();
         } else {
-            // Show single page
+            // Single page with enhanced preview
             this.slides = [{ content: htmlContent, title: 'Full Document' }];
             this.hideSlideNavigation();
         }
         
-        // Show the actual HTML content
+        // Show the current slide with enhanced preview
         this.showCurrentSlide();
     }
     
@@ -183,20 +188,22 @@ class HTMLToPDFConverter {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, 'text/html');
         
-        // Find all slide elements
-        const slideElements = doc.querySelectorAll('.slide');
+        // Find all slide elements using the detected selector
+        const slideElements = doc.querySelectorAll(slideInfo.slideSelector);
         
         this.slides = [];
         slideElements.forEach((slide, index) => {
-            // Create a clean copy of the original HTML with just this slide
-            const slideHtml = this.createCleanSlideHtml(htmlContent, slide, index);
+            // Create an enhanced isolated slide HTML
+            const slideHtml = this.createEnhancedSlideHtml(htmlContent, slideInfo, index);
             this.slides.push({
                 content: slideHtml,
-                title: `Slide ${index + 1}`
+                title: `Slide ${index + 1}`,
+                index: index,
+                method: slideInfo.method
             });
         });
         
-        console.log(`📄 Prepared ${this.slides.length} slides for preview`);
+        console.log(`📄 Prepared ${this.slides.length} slides for enhanced preview`);
     }
     
     extractBaseStyles(doc) {
@@ -214,26 +221,71 @@ class HTMLToPDFConverter {
         return styles.join('\n');
     }
     
-    createCleanSlideHtml(originalHtml, slideElement, index) {
+    createEnhancedSlideHtml(originalHtml, slideInfo, index) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(originalHtml, 'text/html');
         
+        // Enhanced slide isolation based on slide type
+        const allSlides = doc.querySelectorAll(slideInfo.slideSelector);
+        
         // Hide all slides except the current one
-        const allSlides = doc.querySelectorAll('.slide');
         allSlides.forEach((slide, i) => {
             if (i !== index) {
                 slide.style.display = 'none';
+                slide.style.visibility = 'hidden';
+            } else {
+                // Ensure current slide is visible and properly positioned
+                slide.style.display = '';
+                slide.style.visibility = 'visible';
+                slide.classList.add('active');
             }
         });
         
-        // Add a simple override to show only this slide
-        const style = doc.createElement('style');
-        style.textContent = `
-            .slide:nth-child(${index + 1}) {
-                display: flex !important;
+        // Add enhanced preview styles
+        const previewStyle = doc.createElement('style');
+        previewStyle.textContent = `
+            /* Enhanced Preview Styles */
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: hidden !important;
+                background: white !important;
             }
+            
+            /* Standard slide enhancement */
+            .slide {
+                width: 100% !important;
+                height: 100vh !important;
+                position: relative !important;
+                box-sizing: border-box !important;
+            }
+            
+            .slide.active {
+                display: flex !important;
+                visibility: visible !important;
+            }
+            
+            /* Hide navigation elements in preview */
+            .nav-dots, .navigation, .slide-nav {
+                display: none !important;
+            }
+            
+            /* Ensure proper sizing for different slide types */
+            ${slideInfo.method === 'reveal-js' ? `
+                .reveal .slides section {
+                    width: 100% !important;
+                    height: 100vh !important;
+                }
+            ` : ''}
+            
+            ${slideInfo.method === 'swiper' ? `
+                .swiper-slide {
+                    width: 100% !important;
+                    height: 100vh !important;
+                }
+            ` : ''}
         `;
-        doc.head.appendChild(style);
+        doc.head.appendChild(previewStyle);
         
         return doc.documentElement.outerHTML;
     }
@@ -292,23 +344,40 @@ class HTMLToPDFConverter {
     }
     
     fitToWindow() {
-        // Reset to 100% zoom for fit to window
-        this.currentZoom = 1.0;
+        // Calculate optimal zoom to fit content in container
+        const containerWidth = this.previewContainer.offsetWidth - 40; // Account for padding
+        const containerHeight = this.previewContainer.offsetHeight - 40;
+        const frameWidth = this.previewFrame.offsetWidth;
+        const frameHeight = this.previewFrame.offsetHeight;
+        
+        const scaleX = containerWidth / frameWidth;
+        const scaleY = containerHeight / frameHeight;
+        
+        // Use the smaller scale to ensure content fits in both dimensions
+        this.currentZoom = Math.min(scaleX, scaleY, 1.0); // Don't zoom beyond 100%
         this.applyZoom();
         this.updateZoomDisplay();
     }
     
     applyZoom() {
-        // Apply zoom to the iframe content
+        // Enhanced zoom system that maintains aspect ratio
         this.previewFrame.style.transform = `scale(${this.currentZoom})`;
         this.previewFrame.style.transformOrigin = 'top left';
         
-        // Adjust the container to accommodate the scaled content
-        const scaledWidth = this.previewFrame.offsetWidth * this.currentZoom;
-        const scaledHeight = this.previewFrame.offsetHeight * this.currentZoom;
+        // Calculate proper container dimensions
+        const baseWidth = this.previewFrame.offsetWidth;
+        const baseHeight = this.previewFrame.offsetHeight;
+        const scaledWidth = baseWidth * this.currentZoom;
+        const scaledHeight = baseHeight * this.currentZoom;
         
+        // Update container to properly contain scaled content
+        this.previewContent.style.width = `${scaledWidth}px`;
+        this.previewContent.style.height = `${scaledHeight}px`;
         this.previewContent.style.minWidth = `${scaledWidth}px`;
         this.previewContent.style.minHeight = `${scaledHeight}px`;
+        
+        // Adjust preview container scroll behavior
+        this.previewContainer.style.overflow = this.currentZoom > 1 ? 'auto' : 'hidden';
     }
 
     adjustIframeSize() {
@@ -421,29 +490,43 @@ class HTMLToPDFConverter {
         this.displaySlideInfo(slideInfo);
     }
 
-    detectSlideStructure(htmlContent) {
+    async detectSlideStructure(htmlContent) {
         const info = {
             type: 'single-page',
             slideCount: 1,
             method: 'none',
             isHorizontalScroll: false,
-            suggestions: []
+            suggestions: [],
+            slideSelector: '.slide',
+            navigationMethod: 'none'
         };
         
-        // First, check for .slide elements specifically
-        const slideElements = htmlContent.match(/<div[^>]*class="[^"]*slide[^"]*"/gi);
+        // Enhanced slide detection with multiple methods
+        const detectionMethods = [
+            this.detectStandardSlides(htmlContent),
+            this.detectRevealJsSlides(htmlContent),
+            this.detectSwiperSlides(htmlContent),
+            this.detectCustomSlides(htmlContent)
+        ];
         
-        if (slideElements && slideElements.length > 0) {
-            info.slideCount = slideElements.length;
-            info.type = 'slide-based';
-            info.method = '.slide';
-            info.suggestions.push(`Found ${slideElements.length} slides`);
+        // Find the best detection method
+        let bestMethod = null;
+        let maxSlides = 0;
+        
+        for (const method of detectionMethods) {
+            if (method.slideCount > maxSlides) {
+                maxSlides = method.slideCount;
+                bestMethod = method;
+            }
+        }
+        
+        if (bestMethod && bestMethod.slideCount > 1) {
+            Object.assign(info, bestMethod);
+            info.suggestions.push(`Found ${bestMethod.slideCount} slides using ${bestMethod.method}`);
             
-            // Now check if it's also a horizontal scroll presentation
+            // Check for horizontal scroll behavior
             if (this.isHorizontalScrollPresentation(htmlContent)) {
                 info.isHorizontalScroll = true;
-                info.type = 'horizontal-scroll';
-                info.method = 'horizontal-scroll';
                 info.suggestions.push('Horizontal scroll presentation detected');
             }
         }
@@ -451,6 +534,68 @@ class HTMLToPDFConverter {
         return info;
     }
 
+    detectStandardSlides(htmlContent) {
+        const slideElements = htmlContent.match(/<div[^>]*class="[^"]*slide[^"]*"/gi);
+        return {
+            slideCount: slideElements ? slideElements.length : 0,
+            method: 'standard-slides',
+            type: 'slide-based',
+            slideSelector: '.slide',
+            navigationMethod: 'function'
+        };
+    }
+    
+    detectRevealJsSlides(htmlContent) {
+        const revealSlides = htmlContent.match(/<section[^>]*>/gi);
+        const hasReveal = htmlContent.includes('reveal.js') || htmlContent.includes('reveal');
+        return {
+            slideCount: (hasReveal && revealSlides) ? revealSlides.length : 0,
+            method: 'reveal-js',
+            type: 'reveal-presentation',
+            slideSelector: '.reveal .slides section',
+            navigationMethod: 'reveal'
+        };
+    }
+    
+    detectSwiperSlides(htmlContent) {
+        const swiperSlides = htmlContent.match(/<div[^>]*class="[^"]*swiper-slide[^"]*"/gi);
+        return {
+            slideCount: swiperSlides ? swiperSlides.length : 0,
+            method: 'swiper',
+            type: 'swiper-presentation',
+            slideSelector: '.swiper-slide',
+            navigationMethod: 'swiper'
+        };
+    }
+    
+    detectCustomSlides(htmlContent) {
+        // Check for other possible slide patterns
+        const patterns = [
+            /<div[^>]*class="[^"]*page[^"]*"/gi,
+            /<div[^>]*class="[^"]*step[^"]*"/gi,
+            /<article[^>]*>/gi
+        ];
+        
+        let maxCount = 0;
+        let bestPattern = '';
+        
+        for (const pattern of patterns) {
+            const matches = htmlContent.match(pattern);
+            if (matches && matches.length > maxCount) {
+                maxCount = matches.length;
+                bestPattern = pattern.toString();
+            }
+        }
+        
+        return {
+            slideCount: maxCount,
+            method: 'custom-slides',
+            type: 'custom-presentation',
+            slideSelector: bestPattern.includes('page') ? '.page' : bestPattern.includes('step') ? '.step' : 'article',
+            navigationMethod: 'custom'
+        };
+    }
+    
     isHorizontalScrollPresentation(htmlContent) {
         const horizontalIndicators = [
             /overflow-x:\s*scroll/gi,
@@ -509,7 +654,7 @@ class HTMLToPDFConverter {
         `;
     }
 
-    async directDownload() {
+    async generateEnhancedPDF() {
         if (!this.currentFile) {
             this.showError('No file selected');
             return;
@@ -520,19 +665,17 @@ class HTMLToPDFConverter {
         convertBtn.disabled = true;
 
         try {
-            // If we have multiple slides, create a combined PDF document
-            if (this.slides.length > 1) {
-                const combinedHtml = this.createCombinedPdfDocument();
-                this.openPrintDialog(combinedHtml);
-            } else {
-                // Single page - just print the current content
-                const htmlContent = await this.getFileContent(this.currentFile);
-                const enhancedHtml = this.enhanceHtmlForPdf(htmlContent);
-                this.openPrintDialog(enhancedHtml);
-            }
+            // Get conversion options
+            const options = this.getConversionOptions();
+            
+            // Create enhanced PDF document
+            const pdfHtml = await this.createEnhancedPdfDocument(options);
+            
+            // Open in new window for printing with proper print settings
+            this.openEnhancedPrintDialog(pdfHtml, options);
             
         } catch (error) {
-            console.error('Direct download failed:', error);
+            console.error('Enhanced PDF generation failed:', error);
             this.showError('PDF generation failed. Please try again.');
         } finally {
             convertBtn.textContent = '📄 Download PDF';
@@ -540,6 +683,41 @@ class HTMLToPDFConverter {
         }
     }
     
+    openEnhancedPrintDialog(htmlContent, options) {
+        const printWindow = window.open('', '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+        if (printWindow) {
+            printWindow.document.write(htmlContent);
+            printWindow.document.close();
+            
+            // Enhanced print dialog with better timing and error handling
+            printWindow.onload = () => {
+                setTimeout(() => {
+                    try {
+                        printWindow.focus();
+                        printWindow.print();
+                        
+                        // Show success message
+                        this.showSuccessMessage('PDF print dialog opened! Use Ctrl+P or Cmd+P to print.');
+                    } catch (error) {
+                        console.error('Print dialog error:', error);
+                        this.showError('Could not open print dialog. Please try again.');
+                    }
+                }, 1500);
+            };
+            
+            // Fallback for older browsers
+            setTimeout(() => {
+                if (printWindow.document.readyState === 'complete') {
+                    printWindow.focus();
+                    printWindow.print();
+                }
+            }, 2000);
+        } else {
+            this.showError('Could not open print window. Please allow popups for this site.');
+        }
+    }
+    
+    // Keep the simpler print dialog as backup
     openPrintDialog(htmlContent) {
         const frame = document.createElement('iframe');
         frame.style.position = 'fixed';
@@ -584,14 +762,86 @@ class HTMLToPDFConverter {
         return htmlContent.replace('</head>', pdfStyles + '</head>');
     }
     
-    getCurrentPageSize() {
-        const format = document.getElementById('format').value;
+    generatePrintStyles(options) {
+        const pageSize = this.getPageSize(options.format);
+        const marginSize = options.margin || 0.5;
+        
+        return `
+            @media print {
+                * {
+                    -webkit-print-color-adjust: exact !important;
+                    color-adjust: exact !important;
+                }
+                
+                body {
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    background: white !important;
+                    font-size: ${options.scale * 12}px !important;
+                }
+                
+                @page {
+                    size: ${pageSize};
+                    margin: ${marginSize}in;
+                }
+                
+                .slide, section, .swiper-slide, .page, .step {
+                    page-break-after: always !important;
+                    page-break-inside: avoid !important;
+                    width: 100% !important;
+                    height: ${this.getSlideHeight(options.format)} !important;
+                    box-sizing: border-box !important;
+                    overflow: hidden !important;
+                    display: flex !important;
+                    flex-direction: column !important;
+                    position: relative !important;
+                }
+                
+                .slide:last-child, section:last-child, .swiper-slide:last-child, .page:last-child, .step:last-child {
+                    page-break-after: avoid !important;
+                }
+                
+                /* Hide navigation and controls */
+                .nav-dots, .navigation, .slide-nav, .controls, .indicator-dot {
+                    display: none !important;
+                }
+                
+                /* Ensure images and media print correctly */
+                img, canvas, svg {
+                    max-width: 100% !important;
+                    height: auto !important;
+                    page-break-inside: avoid !important;
+                }
+                
+                /* Typography adjustments for print */
+                h1, h2, h3, h4, h5, h6 {
+                    page-break-after: avoid !important;
+                }
+                
+                p, li {
+                    orphans: 3 !important;
+                    widows: 3 !important;
+                }
+            }
+        `;
+    }
+    
+    getPageSize(format) {
         switch(format) {
             case 'portrait': return 'letter portrait';
             case 'vertical': return 'A4 portrait';
             case 'horizontal': return 'A4 landscape';
             case 'classic': return 'letter landscape';
             default: return 'letter';
+        }
+    }
+    
+    getSlideHeight(format) {
+        switch(format) {
+            case 'portrait': return 'calc(11in - 1in)';
+            case 'vertical': return 'calc(297mm - 25mm)';
+            case 'horizontal': return 'calc(210mm - 25mm)';
+            default: return 'calc(100vh - 1in)';
         }
     }
     
@@ -678,51 +928,36 @@ class HTMLToPDFConverter {
         return false;
     }
     
-    createCombinedPdfDocument() {
-        // Take the original HTML from the first slide and extract all slides
+    async createEnhancedPdfDocument(options) {
+        // Get original HTML content
+        const originalHtml = await this.getFileContent(this.currentFile);
         const parser = new DOMParser();
-        const doc = parser.parseFromString(this.slides[0].content, 'text/html');
+        const doc = parser.parseFromString(originalHtml, 'text/html');
         
-        // Remove any hiding styles we added
-        const injectedStyles = doc.querySelectorAll('style');
-        injectedStyles.forEach(style => {
-            if (style.textContent.includes('nth-child')) {
+        // Remove any existing preview styles
+        const existingStyles = doc.querySelectorAll('style');
+        existingStyles.forEach(style => {
+            if (style.textContent.includes('Enhanced Preview Styles')) {
                 style.remove();
             }
         });
         
-        // Make all slides visible for printing
-        const allSlides = doc.querySelectorAll('.slide');
+        // Ensure all slides are visible for printing
+        const allSlides = doc.querySelectorAll('.slide, section, .swiper-slide, .page, .step');
         allSlides.forEach(slide => {
             slide.style.display = '';
+            slide.style.visibility = 'visible';
+            slide.classList.add('active');
         });
         
-        // Add print-specific styles
+        // Add comprehensive print styles
         const printStyle = doc.createElement('style');
-        printStyle.textContent = `
-            @media print {
-                body { 
-                    margin: 0; 
-                    padding: 0; 
-                    background: white; 
-                }
-                @page { 
-                    size: ${this.getCurrentPageSize()}; 
-                    margin: 0.5in; 
-                }
-                .slide { 
-                    page-break-after: always; 
-                    min-height: 100vh;
-                    width: 100%;
-                    box-sizing: border-box;
-                    overflow: hidden;
-                }
-                .slide:last-child { 
-                    page-break-after: avoid; 
-                }
-            }
-        `;
+        printStyle.textContent = this.generatePrintStyles(options);
         doc.head.appendChild(printStyle);
+        
+        // Remove navigation elements
+        const navElements = doc.querySelectorAll('.nav-dots, .navigation, .slide-nav, .controls');
+        navElements.forEach(nav => nav.remove());
         
         return `<!DOCTYPE html>${doc.documentElement.outerHTML}`;
     }
