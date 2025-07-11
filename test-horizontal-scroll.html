@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizontal Scroll Presentation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: auto;
+            overflow-y: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            scroll-snap-type: x mandatory;
+        }
+        
+        .slide {
+            min-width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            box-sizing: border-box;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+        
+        .slide:nth-child(1) {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .slide:nth-child(2) {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .slide:nth-child(3) {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .slide:nth-child(4) {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
+        .slide:nth-child(5) {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        p {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            max-width: 800px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        ul {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            text-align: left;
+            max-width: 600px;
+        }
+        
+        .slide-number {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            font-size: 1.2rem;
+            opacity: 0.7;
+        }
+        
+        .navigation-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            opacity: 0.8;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.4; }
+        }
+        
+        .code-block {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            text-align: left;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="slide">
+            <h1>🚀 Horizontal Scroll Presentation</h1>
+            <p>This is a modern presentation format that uses horizontal scrolling to navigate between slides. Each slide takes up the full viewport width.</p>
+            <p>The system should detect this as a horizontal scroll presentation and properly segment it into individual slides for PDF conversion.</p>
+            <div class="navigation-hint">← Scroll horizontally to navigate →</div>
+            <div class="slide-number">1/5</div>
+        </div>
+        
+        <div class="slide">
+            <h2>📊 Key Features</h2>
+            <ul>
+                <li>Smooth horizontal scrolling navigation</li>
+                <li>Scroll snap for precise slide positioning</li>
+                <li>Full viewport width slides</li>
+                <li>Responsive design for all devices</li>
+                <li>Modern CSS transitions and effects</li>
+                <li>Touch-friendly mobile navigation</li>
+            </ul>
+            <div class="slide-number">2/5</div>
+        </div>
+        
+        <div class="slide">
+            <h2>🛠️ Technical Implementation</h2>
+            <div class="code-block">
+                .container {
+                    display: flex;
+                    flex-direction: row;
+                    scroll-snap-type: x mandatory;
+                }
+                
+                .slide {
+                    min-width: 100vw;
+                    scroll-snap-align: start;
+                }
+            </div>
+            <p>This CSS creates a horizontal scrolling container where each slide snaps into position.</p>
+            <div class="slide-number">3/5</div>
+        </div>
+        
+        <div class="slide">
+            <h2>🎯 Detection Algorithm</h2>
+            <p>The HTML-to-PDF converter should detect this presentation format by looking for:</p>
+            <ul>
+                <li>CSS properties: overflow-x, scroll-snap-type</li>
+                <li>Flexbox with row direction</li>
+                <li>Elements with viewport width sizing</li>
+                <li>Transform translateX properties</li>
+                <li>Horizontal scrolling indicators</li>
+            </ul>
+            <div class="slide-number">4/5</div>
+        </div>
+        
+        <div class="slide">
+            <h2>✨ Expected Behavior</h2>
+            <p>When this HTML is uploaded to the converter, it should:</p>
+            <ul>
+                <li>Detect it as a "horizontal-scroll" presentation</li>
+                <li>Estimate 5 slides based on the container structure</li>
+                <li>Show slide analysis information</li>
+                <li>Generate a PDF with proper slide segmentation</li>
+                <li>Maintain the visual design and layout</li>
+            </ul>
+            <div class="slide-number">5/5</div>
+        </div>
+    </div>
+    
+    <script>
+        // Add smooth scrolling behavior
+        document.addEventListener('keydown', function(e) {
+            const container = document.querySelector('.container');
+            const slideWidth = window.innerWidth;
+            
+            if (e.key === 'ArrowRight') {
+                container.scrollLeft += slideWidth;
+            } else if (e.key === 'ArrowLeft') {
+                container.scrollLeft -= slideWidth;
+            }
+        });
+        
+        // Add touch/swipe support
+        let startX = 0;
+        let scrollLeft = 0;
+        
+        document.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].pageX;
+            scrollLeft = document.querySelector('.container').scrollLeft;
+        });
+        
+        document.addEventListener('touchmove', function(e) {
+            const x = e.touches[0].pageX;
+            const walk = (x - startX) * 2;
+            document.querySelector('.container').scrollLeft = scrollLeft - walk;
+        });
+    </script>
+</body>
+</html>

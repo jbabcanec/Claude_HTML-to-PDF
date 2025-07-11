@@ -7,8 +7,14 @@ class HTMLToPDFConverter {
         this.previewArea = document.getElementById('previewArea');
         this.previewFrame = document.getElementById('previewFrame');
         this.convertBtn = document.getElementById('convertBtn');
+        this.slidesPreview = document.getElementById('slidesPreview');
+        this.zoomIn = document.getElementById('zoomIn');
+        this.zoomOut = document.getElementById('zoomOut');
+        this.zoomLevel = document.getElementById('zoomLevel');
         
         this.currentFile = null;
+        this.currentZoom = 1.0;
+        this.segmentedSlides = [];
         this.init();
     }
 
@@ -42,6 +48,10 @@ class HTMLToPDFConverter {
         
         // Convert button handler
         this.convertBtn.addEventListener('click', () => this.convertToPDF());
+        
+        // Zoom controls
+        this.zoomIn.addEventListener('click', () => this.zoomPreview(0.25));
+        this.zoomOut.addEventListener('click', () => this.zoomPreview(-0.25));
         
         // Smooth scroll for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -120,8 +130,25 @@ class HTMLToPDFConverter {
         this.uploadArea.querySelector('p').textContent = `${(file.size / 1024).toFixed(2)} KB`;
     }
 
-    showPreview(htmlContent) {
+    async showPreview(htmlContent) {
         this.previewArea.style.display = 'block';
+        
+        // Analyze slide structure first
+        const slideInfo = this.detectSlideStructure(htmlContent);
+        
+        if (slideInfo.isHorizontalScroll && slideInfo.slideCount > 1) {
+            // Segment slides for horizontal scroll presentations
+            await this.segmentSlides(htmlContent, slideInfo);
+            this.showSegmentedPreview();
+        } else {
+            // Show single page preview
+            this.showSinglePreview(htmlContent);
+        }
+    }
+    
+    showSinglePreview(htmlContent) {
+        this.previewFrame.style.display = 'block';
+        this.slidesPreview.style.display = 'none';
         
         // Create a blob URL for the preview
         const blob = new Blob([htmlContent], { type: 'text/html' });
@@ -132,6 +159,149 @@ class HTMLToPDFConverter {
         this.previewFrame.onload = () => {
             URL.revokeObjectURL(url);
         };
+    }
+    
+    showSegmentedPreview() {
+        this.previewFrame.style.display = 'none';
+        this.slidesPreview.style.display = 'flex';
+        
+        // Clear existing previews
+        this.slidesPreview.innerHTML = '';
+        
+        // Create previews for each slide
+        this.segmentedSlides.forEach((slideHtml, index) => {
+            const slideContainer = document.createElement('div');
+            slideContainer.className = 'slide-preview';
+            
+            const slideFrame = document.createElement('iframe');
+            slideFrame.style.width = '100%';
+            slideFrame.style.height = '300px';
+            slideFrame.style.border = 'none';
+            
+            const slideNumber = document.createElement('div');
+            slideNumber.className = 'slide-number';
+            slideNumber.textContent = `Slide ${index + 1}`;
+            
+            slideContainer.appendChild(slideFrame);
+            slideContainer.appendChild(slideNumber);
+            this.slidesPreview.appendChild(slideContainer);
+            
+            // Load slide content
+            const blob = new Blob([slideHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            slideFrame.src = url;
+            
+            slideFrame.onload = () => {
+                URL.revokeObjectURL(url);
+            };
+        });
+    }
+    
+    async segmentSlides(htmlContent, slideInfo) {
+        this.segmentedSlides = [];
+        
+        if (slideInfo.isHorizontalScroll) {
+            // Extract individual slides from horizontal scroll presentation
+            const slides = this.extractHorizontalSlides(htmlContent);
+            
+            // Create individual HTML documents for each slide
+            for (let i = 0; i < slides.length; i++) {
+                const slideHtml = this.createSlideDocument(slides[i], i);
+                this.segmentedSlides.push(slideHtml);
+            }
+        }
+        
+        console.log(`📄 Segmented into ${this.segmentedSlides.length} slides`);
+    }
+    
+    extractHorizontalSlides(htmlContent) {
+        const slides = [];
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlContent, 'text/html');
+        
+        // Find all slide elements
+        const slideElements = doc.querySelectorAll('.slide');
+        
+        slideElements.forEach((slide, index) => {
+            slides.push({
+                content: slide.outerHTML,
+                index: index,
+                styles: this.extractStylesForSlide(doc, slide)
+            });
+        });
+        
+        return slides;
+    }
+    
+    extractStylesForSlide(doc, slideElement) {
+        // Extract all CSS styles from the document
+        const styles = [];
+        const styleElements = doc.querySelectorAll('style, link[rel="stylesheet"]');
+        
+        styleElements.forEach(style => {
+            if (style.tagName === 'STYLE') {
+                styles.push(style.outerHTML);
+            } else if (style.tagName === 'LINK') {
+                styles.push(style.outerHTML);
+            }
+        });
+        
+        return styles.join('\n');
+    }
+    
+    createSlideDocument(slide, index) {
+        return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide ${index + 1}</title>
+    ${slide.styles}
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    ${slide.content}
+</body>
+</html>`;
+    }
+    
+    zoomPreview(delta) {
+        this.currentZoom = Math.max(0.25, Math.min(2.0, this.currentZoom + delta));
+        this.updateZoomDisplay();
+        
+        if (this.previewFrame.style.display !== 'none') {
+            this.previewFrame.style.transform = `scale(${this.currentZoom})`;
+        } else {
+            // Apply zoom to segmented slides
+            const slideFrames = this.slidesPreview.querySelectorAll('iframe');
+            slideFrames.forEach(frame => {
+                frame.style.transform = `scale(${this.currentZoom})`;
+                frame.style.transformOrigin = 'top left';
+            });
+        }
+    }
+    
+    updateZoomDisplay() {
+        this.zoomLevel.textContent = `${Math.round(this.currentZoom * 100)}%`;
     }
 
     detectPresentationFormat(htmlContent) {
@@ -400,6 +570,11 @@ class HTMLToPDFConverter {
     }
     
     async tryMultiplePdfMethods(htmlContent) {
+        // If we have segmented slides, use them instead
+        if (this.segmentedSlides.length > 1) {
+            return await this.printSegmentedSlides();
+        }
+        
         // Method 1: Direct window print
         try {
             const tempWindow = window.open('', '_blank', 'width=1200,height=800');
@@ -449,6 +624,100 @@ class HTMLToPDFConverter {
         }
         
         return false; // All methods failed
+    }
+    
+    async printSegmentedSlides() {
+        try {
+            // Create a combined document with all slides
+            const combinedHtml = this.createCombinedSlideDocument();
+            
+            const tempWindow = window.open('', '_blank', 'width=1200,height=800');
+            if (tempWindow) {
+                tempWindow.document.write(combinedHtml);
+                tempWindow.document.close();
+                
+                // Wait for load
+                await new Promise(resolve => {
+                    tempWindow.addEventListener('load', resolve);
+                    setTimeout(resolve, 3000); // Extra time for multiple slides
+                });
+                
+                tempWindow.print();
+                return true;
+            }
+        } catch (error) {
+            console.log('Segmented slides print failed:', error);
+        }
+        
+        return false;
+    }
+    
+    createCombinedSlideDocument() {
+        const slideContents = this.segmentedSlides.map((slideHtml, index) => {
+            // Extract just the slide content from each HTML document
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(slideHtml, 'text/html');
+            const slideElement = doc.querySelector('.slide');
+            return slideElement ? slideElement.outerHTML : '';
+        }).join('\n');
+        
+        // Get original styles from the first slide
+        const parser = new DOMParser();
+        const firstSlideDoc = parser.parseFromString(this.segmentedSlides[0], 'text/html');
+        const styles = firstSlideDoc.querySelector('style') ? firstSlideDoc.querySelector('style').outerHTML : '';
+        
+        return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentation - ${this.segmentedSlides.length} Slides</title>
+    ${styles}
+    <style>
+        @media print {
+            body { margin: 0; padding: 0; }
+            @page { 
+                size: ${this.getCurrentPageSize()}; 
+                margin: 0.5in; 
+            }
+            .slide { 
+                page-break-after: always; 
+                min-height: 100vh;
+                width: 100vw;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+            }
+            .slide:last-child { 
+                page-break-after: avoid; 
+            }
+        }
+        
+        @media screen {
+            body { 
+                margin: 0; 
+                padding: 0; 
+                background: #f0f0f0;
+            }
+            .slide {
+                width: 100vw;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    ${slideContents}
+</body>
+</html>`;
     }
     
     getConversionOptions() {

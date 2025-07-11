@@ -81,8 +81,17 @@
             </div>
 
             <div class="preview-area" id="previewArea" style="display: none;">
-                <h3>Preview</h3>
-                <iframe id="previewFrame"></iframe>
+                <h3>Preview
+                    <div class="preview-controls">
+                        <button class="zoom-btn" id="zoomOut">−</button>
+                        <span class="zoom-level" id="zoomLevel">100%</span>
+                        <button class="zoom-btn" id="zoomIn">+</button>
+                    </div>
+                </h3>
+                <div class="preview-container">
+                    <div id="slidesPreview" class="slides-preview" style="display: none;"></div>
+                    <iframe id="previewFrame"></iframe>
+                </div>
             </div>
         </section>
 
