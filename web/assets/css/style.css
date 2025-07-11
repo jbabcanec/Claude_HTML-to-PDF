@@ -117,6 +117,12 @@ nav a:hover {
     box-shadow: var(--shadow-md);
 }
 
+.upload-area:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+    border-color: var(--accent-color);
+}
+
 .upload-area.drag-over {
     border-color: var(--primary-color);
     background-color: var(--secondary-color);
