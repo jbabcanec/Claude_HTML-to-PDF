@@ -1031,8 +1031,38 @@ class HTMLToPDFConverter {
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', () => {
     new HTMLToPDFConverter();
+    initMobileMenu();
     console.log('🚀 HTML-to-PDF Converter initialized');
 });
+
+// Mobile menu functionality
+function initMobileMenu() {
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    const nav = document.getElementById('nav');
+    
+    if (mobileToggle && nav) {
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            nav.classList.toggle('mobile-open');
+        });
+
+        // Close menu when clicking on a link
+        nav.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileToggle.classList.remove('active');
+                nav.classList.remove('mobile-open');
+            });
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileToggle.contains(e.target) && !nav.contains(e.target)) {
+                mobileToggle.classList.remove('active');
+                nav.classList.remove('mobile-open');
+            }
+        });
+    }
+}
 
 // CLI Tools Functions
 function downloadCLI() {
