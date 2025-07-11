@@ -240,7 +240,7 @@ class HTMLToPDFConverter {
     
     showCurrentSlide() {
         if (this.slides.length === 0) return;
-        
+
         const currentSlide = this.slides[this.currentSlide];
         
         // Create blob URL for current slide
@@ -249,11 +249,11 @@ class HTMLToPDFConverter {
         
         // Update iframe with proper settings
         this.previewFrame.src = url;
-        
+
         // Clean up previous blob URL
         this.previewFrame.onload = () => {
             URL.revokeObjectURL(url);
-            // Apply current zoom after loading
+            this.adjustIframeSize();
             this.applyZoom();
         };
         
@@ -310,6 +310,20 @@ class HTMLToPDFConverter {
         this.previewContent.style.minWidth = `${scaledWidth}px`;
         this.previewContent.style.minHeight = `${scaledHeight}px`;
     }
+
+    adjustIframeSize() {
+        try {
+            const doc = this.previewFrame.contentDocument || this.previewFrame.contentWindow.document;
+            const slide = doc.querySelector('.slide') || doc.body;
+            const rect = slide.getBoundingClientRect();
+            this.previewFrame.style.width = rect.width + 'px';
+            this.previewFrame.style.height = rect.height + 'px';
+        } catch (e) {
+            // Fallback to default size
+            this.previewFrame.style.width = '100%';
+            this.previewFrame.style.height = '600px';
+        }
+    }
     
     updateZoomDisplay() {
         this.zoomLevel.textContent = `${Math.round(this.currentZoom * 100)}%`;
@@ -324,6 +338,10 @@ class HTMLToPDFConverter {
             formatSelect.value = 'horizontal';
         } else if (htmlContent.includes('width=1080') || htmlContent.includes('9:16')) {
             formatSelect.value = 'vertical';
+        } else if (htmlContent.includes('4:3') || htmlContent.includes('width=1024')) {
+            formatSelect.value = 'classic';
+        } else if (htmlContent.includes('8.5x11') || htmlContent.includes('612x792')) {
+            formatSelect.value = 'portrait';
         } else {
             // Check for portrait suitability
             const portraitScore = this.calculatePortraitScore(htmlContent);
@@ -523,17 +541,22 @@ class HTMLToPDFConverter {
     }
     
     openPrintDialog(htmlContent) {
-        const printWindow = window.open('', '_blank', 'width=1200,height=800');
-        if (printWindow) {
-            printWindow.document.write(htmlContent);
-            printWindow.document.close();
-            
-            // Wait for content to load then open print dialog
-            setTimeout(() => {
-                printWindow.focus();
-                printWindow.print();
-            }, 1000);
-        }
+        const frame = document.createElement('iframe');
+        frame.style.position = 'fixed';
+        frame.style.right = '0';
+        frame.style.bottom = '0';
+        frame.style.width = '0';
+        frame.style.height = '0';
+        frame.style.border = 'none';
+        document.body.appendChild(frame);
+
+        frame.onload = () => {
+            frame.contentWindow.focus();
+            frame.contentWindow.print();
+            setTimeout(() => frame.remove(), 1000);
+        };
+
+        frame.srcdoc = htmlContent;
     }
     
     enhanceHtmlForPdf(htmlContent) {
@@ -567,6 +590,7 @@ class HTMLToPDFConverter {
             case 'portrait': return 'letter portrait';
             case 'vertical': return 'A4 portrait';
             case 'horizontal': return 'A4 landscape';
+            case 'classic': return 'letter landscape';
             default: return 'letter';
         }
     }
