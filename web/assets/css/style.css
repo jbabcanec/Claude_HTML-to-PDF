@@ -217,27 +217,34 @@ nav a:hover {
 .preview-area {
     background: var(--card-background);
     border-radius: var(--radius-lg);
-    padding: 40px;
+    padding: 30px;
     margin: 0 auto 40px;
-    max-width: 1200px;
+    max-width: 1400px;
     box-shadow: var(--shadow-md);
 }
 
-.preview-area h3 {
-    font-size: 24px;
-    margin-bottom: 24px;
+.preview-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.preview-header h3 {
+    font-size: 24px;
+    margin: 0;
+    color: var(--text-primary);
 }
 
 .preview-controls {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
 }
 
-.zoom-btn {
+.zoom-btn, .nav-btn {
     background: var(--primary-color);
     color: white;
     border: none;
@@ -245,72 +252,78 @@ nav a:hover {
     padding: 8px 12px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.2s;
-}
-
-.zoom-btn:hover {
-    background: var(--accent-color);
-}
-
-.zoom-level {
-    font-size: 14px;
-    color: var(--text-secondary);
-    min-width: 50px;
-    text-align: center;
-}
-
-.preview-container {
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
-    overflow: hidden;
-    position: relative;
-    background: #f5f5f5;
-    min-height: 500px;
+    transition: all 0.2s;
+    min-width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-#previewFrame {
-    width: 100%;
-    height: 500px;
-    border: none;
-    transform-origin: center;
-    transition: transform 0.3s ease;
+.zoom-btn:hover, .nav-btn:hover {
+    background: var(--accent-color);
+    transform: translateY(-1px);
 }
 
-.slides-preview {
+.zoom-btn:active, .nav-btn:active {
+    transform: translateY(0);
+}
+
+.zoom-level {
+    font-size: 14px;
+    color: var(--text-secondary);
+    min-width: 60px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.slide-nav {
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-height: 600px;
-    overflow-y: auto;
-    padding: 20px;
+    gap: 8px;
+    align-items: center;
+    margin-left: 20px;
+    padding-left: 20px;
+    border-left: 1px solid var(--border-color);
 }
 
-.slide-preview {
+.slide-counter {
+    font-size: 14px;
+    color: var(--text-secondary);
+    min-width: 60px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.preview-container {
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
-    overflow: hidden;
+    overflow: auto;
     position: relative;
+    background: #f8f9fa;
+    min-height: 600px;
+    max-height: 80vh;
 }
 
-.slide-preview iframe {
+.preview-content {
+    position: relative;
     width: 100%;
-    height: 300px;
-    border: none;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-.slide-number {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(0,0,0,0.7);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: bold;
+#previewFrame {
+    width: 100%;
+    height: 600px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform-origin: center top;
+    transition: transform 0.3s ease;
 }
 
 /* Features Section */
@@ -599,17 +612,27 @@ footer {
     }
     
     .preview-area {
-        padding: 24px;
+        padding: 20px;
     }
     
-    .preview-area h3 {
+    .preview-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 12px;
+        gap: 15px;
     }
     
     .preview-controls {
-        align-self: flex-start;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .slide-nav {
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+        padding-top: 8px;
+        margin-top: 8px;
     }
     
     .preview-container {
@@ -621,8 +644,11 @@ footer {
         width: 100%;
     }
     
-    .slide-preview iframe {
-        height: 250px;
+    .zoom-btn, .nav-btn {
+        padding: 6px 10px;
+        font-size: 14px;
+        min-width: 32px;
+        height: 32px;
     }
     
     .features,

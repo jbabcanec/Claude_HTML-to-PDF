@@ -81,16 +81,24 @@
             </div>
 
             <div class="preview-area" id="previewArea" style="display: none;">
-                <h3>Preview
+                <div class="preview-header">
+                    <h3>Preview</h3>
                     <div class="preview-controls">
-                        <button class="zoom-btn" id="zoomOut">−</button>
+                        <button class="zoom-btn" id="zoomOut" title="Zoom Out">−</button>
                         <span class="zoom-level" id="zoomLevel">100%</span>
-                        <button class="zoom-btn" id="zoomIn">+</button>
+                        <button class="zoom-btn" id="zoomIn" title="Zoom In">+</button>
+                        <button class="zoom-btn" id="zoomFit" title="Fit to Window">⊞</button>
+                        <div class="slide-nav" id="slideNav" style="display: none;">
+                            <button class="nav-btn" id="prevSlide">‹</button>
+                            <span class="slide-counter" id="slideCounter">1 / 1</span>
+                            <button class="nav-btn" id="nextSlide">›</button>
+                        </div>
                     </div>
-                </h3>
-                <div class="preview-container">
-                    <div id="slidesPreview" class="slides-preview" style="display: none;"></div>
-                    <iframe id="previewFrame"></iframe>
+                </div>
+                <div class="preview-container" id="previewContainer">
+                    <div class="preview-content" id="previewContent">
+                        <iframe id="previewFrame"></iframe>
+                    </div>
                 </div>
             </div>
         </section>

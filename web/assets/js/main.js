@@ -7,14 +7,21 @@ class HTMLToPDFConverter {
         this.previewArea = document.getElementById('previewArea');
         this.previewFrame = document.getElementById('previewFrame');
         this.convertBtn = document.getElementById('convertBtn');
-        this.slidesPreview = document.getElementById('slidesPreview');
         this.zoomIn = document.getElementById('zoomIn');
         this.zoomOut = document.getElementById('zoomOut');
+        this.zoomFit = document.getElementById('zoomFit');
         this.zoomLevel = document.getElementById('zoomLevel');
+        this.slideNav = document.getElementById('slideNav');
+        this.prevSlide = document.getElementById('prevSlide');
+        this.nextSlide = document.getElementById('nextSlide');
+        this.slideCounter = document.getElementById('slideCounter');
+        this.previewContainer = document.getElementById('previewContainer');
+        this.previewContent = document.getElementById('previewContent');
         
         this.currentFile = null;
         this.currentZoom = 1.0;
-        this.segmentedSlides = [];
+        this.currentSlide = 0;
+        this.slides = [];
         this.init();
     }
 
@@ -52,6 +59,22 @@ class HTMLToPDFConverter {
         // Zoom controls
         this.zoomIn.addEventListener('click', () => this.zoomPreview(0.25));
         this.zoomOut.addEventListener('click', () => this.zoomPreview(-0.25));
+        this.zoomFit.addEventListener('click', () => this.fitToWindow());
+        
+        // Slide navigation
+        this.prevSlide.addEventListener('click', () => this.navigateSlide(-1));
+        this.nextSlide.addEventListener('click', () => this.navigateSlide(1));
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (this.previewArea.style.display !== 'none') {
+                if (e.key === 'ArrowLeft') this.navigateSlide(-1);
+                if (e.key === 'ArrowRight') this.navigateSlide(1);
+                if (e.key === '=' || e.key === '+') this.zoomPreview(0.25);
+                if (e.key === '-') this.zoomPreview(-0.25);
+                if (e.key === '0') this.fitToWindow();
+            }
+        });
         
         // Smooth scroll for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -133,108 +156,54 @@ class HTMLToPDFConverter {
     async showPreview(htmlContent) {
         this.previewArea.style.display = 'block';
         
-        // Analyze slide structure first
+        // Reset to initial state
+        this.currentZoom = 1.0;
+        this.currentSlide = 0;
+        this.slides = [];
+        this.updateZoomDisplay();
+        
+        // Analyze slide structure
         const slideInfo = this.detectSlideStructure(htmlContent);
         
         if (slideInfo.isHorizontalScroll && slideInfo.slideCount > 1) {
-            // Segment slides for horizontal scroll presentations
-            await this.segmentSlides(htmlContent, slideInfo);
-            this.showSegmentedPreview();
+            // Extract and prepare slides
+            await this.prepareSlides(htmlContent, slideInfo);
+            this.showSlideNavigation();
+            this.showCurrentSlide();
         } else {
-            // Show single page preview
-            this.showSinglePreview(htmlContent);
-        }
-    }
-    
-    showSinglePreview(htmlContent) {
-        this.previewFrame.style.display = 'block';
-        this.slidesPreview.style.display = 'none';
-        
-        // Create a blob URL for the preview
-        const blob = new Blob([htmlContent], { type: 'text/html' });
-        const url = URL.createObjectURL(blob);
-        this.previewFrame.src = url;
-        
-        // Clean up blob URL when frame loads
-        this.previewFrame.onload = () => {
-            URL.revokeObjectURL(url);
-        };
-    }
-    
-    showSegmentedPreview() {
-        this.previewFrame.style.display = 'none';
-        this.slidesPreview.style.display = 'flex';
-        
-        // Clear existing previews
-        this.slidesPreview.innerHTML = '';
-        
-        // Create previews for each slide
-        this.segmentedSlides.forEach((slideHtml, index) => {
-            const slideContainer = document.createElement('div');
-            slideContainer.className = 'slide-preview';
-            
-            const slideFrame = document.createElement('iframe');
-            slideFrame.style.width = '100%';
-            slideFrame.style.height = '300px';
-            slideFrame.style.border = 'none';
-            
-            const slideNumber = document.createElement('div');
-            slideNumber.className = 'slide-number';
-            slideNumber.textContent = `Slide ${index + 1}`;
-            
-            slideContainer.appendChild(slideFrame);
-            slideContainer.appendChild(slideNumber);
-            this.slidesPreview.appendChild(slideContainer);
-            
-            // Load slide content
-            const blob = new Blob([slideHtml], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            slideFrame.src = url;
-            
-            slideFrame.onload = () => {
-                URL.revokeObjectURL(url);
-            };
-        });
-    }
-    
-    async segmentSlides(htmlContent, slideInfo) {
-        this.segmentedSlides = [];
-        
-        if (slideInfo.isHorizontalScroll) {
-            // Extract individual slides from horizontal scroll presentation
-            const slides = this.extractHorizontalSlides(htmlContent);
-            
-            // Create individual HTML documents for each slide
-            for (let i = 0; i < slides.length; i++) {
-                const slideHtml = this.createSlideDocument(slides[i], i);
-                this.segmentedSlides.push(slideHtml);
-            }
+            // Show single page
+            this.slides = [{ content: htmlContent, title: 'Full Document' }];
+            this.hideSlideNavigation();
+            this.showCurrentSlide();
         }
         
-        console.log(`📄 Segmented into ${this.segmentedSlides.length} slides`);
+        // Fit to window initially
+        setTimeout(() => this.fitToWindow(), 100);
     }
     
-    extractHorizontalSlides(htmlContent) {
-        const slides = [];
+    async prepareSlides(htmlContent, slideInfo) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlContent, 'text/html');
+        
+        // Extract base styles
+        const baseStyles = this.extractBaseStyles(doc);
         
         // Find all slide elements
         const slideElements = doc.querySelectorAll('.slide');
         
+        this.slides = [];
         slideElements.forEach((slide, index) => {
-            slides.push({
-                content: slide.outerHTML,
-                index: index,
-                styles: this.extractStylesForSlide(doc, slide)
+            const slideHtml = this.createSlideHtml(slide, baseStyles, index);
+            this.slides.push({
+                content: slideHtml,
+                title: `Slide ${index + 1}`
             });
         });
         
-        return slides;
+        console.log(`📄 Prepared ${this.slides.length} slides for preview`);
     }
     
-    extractStylesForSlide(doc, slideElement) {
-        // Extract all CSS styles from the document
+    extractBaseStyles(doc) {
         const styles = [];
         const styleElements = doc.querySelectorAll('style, link[rel="stylesheet"]');
         
@@ -249,14 +218,14 @@ class HTMLToPDFConverter {
         return styles.join('\n');
     }
     
-    createSlideDocument(slide, index) {
+    createSlideHtml(slide, baseStyles, index) {
         return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slide ${index + 1}</title>
-    ${slide.styles}
+    ${baseStyles}
     <style>
         body { 
             margin: 0; 
@@ -266,38 +235,101 @@ class HTMLToPDFConverter {
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            background: #f0f0f0;
         }
         .slide {
-            width: 100vw;
-            height: 100vh;
+            width: 90vw;
+            height: 90vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
-    ${slide.content}
+    ${slide.outerHTML}
 </body>
 </html>`;
     }
     
-    zoomPreview(delta) {
-        this.currentZoom = Math.max(0.25, Math.min(2.0, this.currentZoom + delta));
-        this.updateZoomDisplay();
+    showCurrentSlide() {
+        if (this.slides.length === 0) return;
         
-        if (this.previewFrame.style.display !== 'none') {
-            this.previewFrame.style.transform = `scale(${this.currentZoom})`;
+        const currentSlide = this.slides[this.currentSlide];
+        
+        // Create blob URL for current slide
+        const blob = new Blob([currentSlide.content], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        
+        // Update iframe
+        this.previewFrame.src = url;
+        
+        // Clean up previous blob URL
+        this.previewFrame.onload = () => {
+            URL.revokeObjectURL(url);
+        };
+        
+        // Update slide counter
+        this.updateSlideCounter();
+    }
+    
+    showSlideNavigation() {
+        this.slideNav.style.display = 'flex';
+        this.updateSlideCounter();
+    }
+    
+    hideSlideNavigation() {
+        this.slideNav.style.display = 'none';
+    }
+    
+    updateSlideCounter() {
+        if (this.slides.length > 1) {
+            this.slideCounter.textContent = `${this.currentSlide + 1} / ${this.slides.length}`;
         } else {
-            // Apply zoom to segmented slides
-            const slideFrames = this.slidesPreview.querySelectorAll('iframe');
-            slideFrames.forEach(frame => {
-                frame.style.transform = `scale(${this.currentZoom})`;
-                frame.style.transformOrigin = 'top left';
-            });
+            this.slideCounter.textContent = '1 / 1';
         }
+    }
+    
+    navigateSlide(direction) {
+        if (this.slides.length <= 1) return;
+        
+        this.currentSlide = Math.max(0, Math.min(this.slides.length - 1, this.currentSlide + direction));
+        this.showCurrentSlide();
+    }
+    
+    zoomPreview(delta) {
+        this.currentZoom = Math.max(0.25, Math.min(3.0, this.currentZoom + delta));
+        this.applyZoom();
+        this.updateZoomDisplay();
+    }
+    
+    fitToWindow() {
+        // Calculate the best fit zoom level
+        const containerWidth = this.previewContainer.clientWidth - 40; // Account for padding
+        const containerHeight = this.previewContainer.clientHeight - 40;
+        const frameWidth = this.previewFrame.offsetWidth;
+        const frameHeight = this.previewFrame.offsetHeight;
+        
+        const scaleX = containerWidth / frameWidth;
+        const scaleY = containerHeight / frameHeight;
+        
+        this.currentZoom = Math.min(scaleX, scaleY, 1.0); // Don't zoom beyond 100%
+        this.applyZoom();
+        this.updateZoomDisplay();
+    }
+    
+    applyZoom() {
+        this.previewFrame.style.transform = `scale(${this.currentZoom})`;
+        
+        // Adjust container height based on zoom
+        const scaledHeight = this.previewFrame.offsetHeight * this.currentZoom;
+        this.previewContent.style.minHeight = `${scaledHeight + 40}px`;
     }
     
     updateZoomDisplay() {
@@ -394,46 +426,29 @@ class HTMLToPDFConverter {
 
     detectSlideStructure(htmlContent) {
         const info = {
-            type: 'unknown',
+            type: 'single-page',
             slideCount: 1,
             method: 'none',
             isHorizontalScroll: false,
             suggestions: []
         };
         
-        // Check for horizontal scrolling presentations
-        if (this.isHorizontalScrollPresentation(htmlContent)) {
-            info.type = 'horizontal-scroll';
-            info.isHorizontalScroll = true;
-            info.slideCount = this.estimateScrollSlides(htmlContent);
-            info.method = 'horizontal-scroll';
-            info.suggestions.push('Detected horizontal scroll presentation');
-        }
+        // First, check for .slide elements specifically
+        const slideElements = htmlContent.match(/<div[^>]*class="[^"]*slide[^"]*"/gi);
         
-        // Check for slide-based presentations
-        const slideSelectors = [
-            '.slide', '[data-slide]', '.swiper-slide', '.reveal .slides section',
-            '.step', '.page', 'section', '.slide-container'
-        ];
-        
-        for (const selector of slideSelectors) {
-            const regex = new RegExp(`<[^>]*class="[^"]*${selector.replace('.', '')}[^"]*"`, 'gi');
-            const matches = htmlContent.match(regex);
-            if (matches && matches.length > 1) {
-                info.type = 'slide-based';
-                info.slideCount = matches.length;
-                info.method = selector;
-                info.suggestions.push(`Found ${matches.length} slides using ${selector}`);
-                break;
+        if (slideElements && slideElements.length > 0) {
+            info.slideCount = slideElements.length;
+            info.type = 'slide-based';
+            info.method = '.slide';
+            info.suggestions.push(`Found ${slideElements.length} slides`);
+            
+            // Now check if it's also a horizontal scroll presentation
+            if (this.isHorizontalScrollPresentation(htmlContent)) {
+                info.isHorizontalScroll = true;
+                info.type = 'horizontal-scroll';
+                info.method = 'horizontal-scroll';
+                info.suggestions.push('Horizontal scroll presentation detected');
             }
-        }
-        
-        // Check for indicator-based navigation
-        const indicatorRegex = /<[^>]*class="[^"]*(?:indicator|dot|bullet|nav)[^"]*"/gi;
-        const indicatorMatches = htmlContent.match(indicatorRegex);
-        if (indicatorMatches && indicatorMatches.length > 1) {
-            info.slideCount = Math.max(info.slideCount, indicatorMatches.length);
-            info.suggestions.push(`Found ${indicatorMatches.length} navigation indicators`);
         }
         
         return info;
@@ -514,20 +529,15 @@ class HTMLToPDFConverter {
             // Enhanced approach: Create a better formatted document
             const enhancedHtml = this.enhanceHtmlForPdf(htmlContent);
             
-            // Try multiple methods for PDF generation
-            const success = await this.tryMultiplePdfMethods(enhancedHtml);
+            // Try to generate PDF - this will open print dialog
+            await this.tryMultiplePdfMethods(enhancedHtml);
             
-            if (success) {
-                this.showSuccessMessage('PDF generation successful! Check your downloads folder.');
-            } else {
-                // Fallback: show the modal instructions
-                this.showDownloadInstructions(this.getConversionOptions());
-            }
+            // Don't show success message since we can't detect actual PDF generation
+            // Just show instruction that print dialog should have opened
             
         } catch (error) {
             console.error('Direct download failed:', error);
-            // Always provide fallback
-            this.showDownloadInstructions(this.getConversionOptions());
+            this.showError('PDF generation failed. Please try again.');
         } finally {
             convertBtn.textContent = '📄 Download PDF';
             convertBtn.disabled = false;
@@ -570,9 +580,9 @@ class HTMLToPDFConverter {
     }
     
     async tryMultiplePdfMethods(htmlContent) {
-        // If we have segmented slides, use them instead
-        if (this.segmentedSlides.length > 1) {
-            return await this.printSegmentedSlides();
+        // If we have multiple slides, use them instead
+        if (this.slides.length > 1) {
+            return await this.printMultipleSlides();
         }
         
         // Method 1: Direct window print
@@ -626,10 +636,10 @@ class HTMLToPDFConverter {
         return false; // All methods failed
     }
     
-    async printSegmentedSlides() {
+    async printMultipleSlides() {
         try {
             // Create a combined document with all slides
-            const combinedHtml = this.createCombinedSlideDocument();
+            const combinedHtml = this.createCombinedPdfDocument();
             
             const tempWindow = window.open('', '_blank', 'width=1200,height=800');
             if (tempWindow) {
@@ -646,36 +656,36 @@ class HTMLToPDFConverter {
                 return true;
             }
         } catch (error) {
-            console.log('Segmented slides print failed:', error);
+            console.log('Multiple slides print failed:', error);
         }
         
         return false;
     }
     
-    createCombinedSlideDocument() {
-        const slideContents = this.segmentedSlides.map((slideHtml, index) => {
-            // Extract just the slide content from each HTML document
+    createCombinedPdfDocument() {
+        // Extract slide content from each slide
+        const slideContents = this.slides.map((slide, index) => {
             const parser = new DOMParser();
-            const doc = parser.parseFromString(slideHtml, 'text/html');
+            const doc = parser.parseFromString(slide.content, 'text/html');
             const slideElement = doc.querySelector('.slide');
             return slideElement ? slideElement.outerHTML : '';
         }).join('\n');
         
-        // Get original styles from the first slide
+        // Get base styles from the first slide
         const parser = new DOMParser();
-        const firstSlideDoc = parser.parseFromString(this.segmentedSlides[0], 'text/html');
-        const styles = firstSlideDoc.querySelector('style') ? firstSlideDoc.querySelector('style').outerHTML : '';
+        const firstSlideDoc = parser.parseFromString(this.slides[0].content, 'text/html');
+        const headContent = firstSlideDoc.querySelector('head').innerHTML;
         
         return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presentation - ${this.segmentedSlides.length} Slides</title>
-    ${styles}
+    <title>Presentation - ${this.slides.length} Slides</title>
+    ${headContent}
     <style>
         @media print {
-            body { margin: 0; padding: 0; }
+            body { margin: 0; padding: 0; background: white; }
             @page { 
                 size: ${this.getCurrentPageSize()}; 
                 margin: 0.5in; 
@@ -683,12 +693,13 @@ class HTMLToPDFConverter {
             .slide { 
                 page-break-after: always; 
                 min-height: 100vh;
-                width: 100vw;
+                width: 100%;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 box-sizing: border-box;
+                background: white;
             }
             .slide:last-child { 
                 page-break-after: avoid; 
@@ -698,18 +709,21 @@ class HTMLToPDFConverter {
         @media screen {
             body { 
                 margin: 0; 
-                padding: 0; 
+                padding: 20px; 
                 background: #f0f0f0;
             }
             .slide {
-                width: 100vw;
+                width: 100%;
                 min-height: 100vh;
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 box-sizing: border-box;
-                margin-bottom: 20px;
+                margin-bottom: 40px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             }
         }
     </style>
